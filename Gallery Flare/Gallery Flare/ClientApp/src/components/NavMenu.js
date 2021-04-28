@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
+import Button from '@material-ui/core/Button';
+import UploadModal from './UploadModal';
+import DropZone from './DropZone';
 
 export class NavMenu extends Component {
     static displayName = NavMenu.name;
@@ -11,7 +14,8 @@ export class NavMenu extends Component {
 
         this.toggleNavbar = this.toggleNavbar.bind(this);
         this.state = {
-            collapsed: true
+            collapsed: true,
+            open: false
         };
     }
 
@@ -22,6 +26,14 @@ export class NavMenu extends Component {
     }
 
     render() {
+        const handleOpen = () => {
+            this.setState({ open: true });
+        };
+
+        const handleClose = () => {
+            this.setState({ open: false });
+        };
+
         return (
             <header>
                 <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
@@ -33,15 +45,17 @@ export class NavMenu extends Component {
                                 <NavItem>
                                     <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
                                 </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
-                                </NavItem>
+                     
                                 <NavItem>
                                     <NavLink tag={Link} className="text-dark" to="/gallery">Gallery</NavLink>
                                 </NavItem>
+                                <div className="uploadButton">
+                                    {/*<Button className="btn btn-primary btn-sm" variant="contained" color="primary" size="small" onClick={handleOpen}>
+                                        Upload
+                                    </Button>
+                                    <UploadModal open={this.state.open} close={handleClose} />*/}
+                                    <DropZone/>
+                                </div>                        
                             </ul>
                         </Collapse>
                     </Container>
