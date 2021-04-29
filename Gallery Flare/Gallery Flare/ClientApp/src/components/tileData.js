@@ -7,7 +7,7 @@
         featured: true,
     },
     {
-        img: '/static/images/grid-list/burgers.jpg',
+        img: 'https://galleryflare.blob.core.windows.net/flare/jawad.jpg',
         title: 'Tasty burger',
         author: 'director90',
     },
@@ -17,7 +17,7 @@
         author: 'Danson67',
     },
     {
-        img: '/static/images/grid-list/morning.jpg',
+        img: 'https://material-ui.com/static/images/grid-list/olive.jpg',
         title: 'Morning',
         author: 'fancycrave1',
         featured: true,

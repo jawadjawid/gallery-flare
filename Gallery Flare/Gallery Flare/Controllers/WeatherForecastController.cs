@@ -4,6 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Gallery_Flare.Controllers
 {
@@ -34,6 +40,26 @@ namespace Gallery_Flare.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpPost]
+        public async Task<OkObjectResult> PostAsync([FromForm] IFormFile file, [FromForm] string access)
+        {
+            try
+            {
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=galleryflare;AccountKey=qEzmObr5GKhv8XTXXl0PEOAQ3J/hVZM+tbpllTbRv1uHK76OCeeD0AufUsyoguYeaidqTWKEkl2nbB1LMK6wLw==;EndpointSuffix=core.windows.net");
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                CloudBlobContainer container = blobClient.GetContainerReference("flare");
+                var blob = container.GetBlockBlobReference($"{file.FileName}_{DateTimeOffset.Now.ToUnixTimeMilliseconds()}");
+
+                await blob.UploadFromStreamAsync(file.OpenReadStream());
+                var blobUrl = blob.Uri.AbsoluteUri;
+                return Ok("uploaded");
+
+            } catch(Exception e)
+            {
+                return Ok("fail");
+            }
         }
     }
 }
