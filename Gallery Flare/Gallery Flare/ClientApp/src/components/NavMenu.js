@@ -39,7 +39,11 @@ export class NavMenu extends Component {
                                 </NavItem>
                      
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/gallery">Gallery</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/gallery">My Gallery</NavLink>
+                                </NavItem>
+
+                                <NavItem>
+                                    <NavLink tag={Link} className="text-dark" to="/gallery">Public Gallery</NavLink>
                                 </NavItem>
                                 <div className="uploadButton">
                                     {/*<Button className="btn btn-primary btn-sm" variant="contained" color="primary" size="small" onClick={handleOpen}>

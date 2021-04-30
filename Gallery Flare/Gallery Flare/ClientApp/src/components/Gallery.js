@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+
 /**
  * The example data is structured as follows:
  *
@@ -45,28 +46,56 @@ const useStyles = makeStyles((theme) => ({
  * ];
  */
 
+
 const Gallery = () => {
+    const [forecasts, setForecasts] = React.useState([]);
+    const [loading, setLoading] = React.useState(true);
+    const [hasLoaded, setHasLoaded] = React.useState(false);
+
     const classes = useStyles();
+
+    const populateWeatherData = async () => {
+        const response = await fetch('weatherforecast');
+        const data = await response.json();
+
+        setForecasts(data);
+        setLoading(false);
+    }
+
+    if (!hasLoaded) {
+        populateWeatherData();
+        setHasLoaded(true);
+    }
+
+    React.useEffect(() => console.log(forecasts.length), [forecasts]);
+    let data;
+
+    if (forecasts.length != 0) {
+        data = forecasts.map((tile) => (
+            <GridListTile key={tile.img}>
+                <img src={tile.img} alt={tile.title} />
+                <GridListTileBar
+                    title={tile.title}
+                    subtitle={<span>by: {tile.author}</span>}
+                    actionIcon={
+                        <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
+                            <InfoIcon />
+                        </IconButton>
+                    }
+                />
+            </GridListTile>
+        ));
+    } else {
+        data = <h1>Loading Images...</h1>;
+    }
+
     return (
         <div >
             <GridList cellHeight={180} >
                 <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
                     <ListSubheader component="div">Gallery</ListSubheader>
                 </GridListTile>
-                {tileData.map((tile) => (
-                    <GridListTile key={tile.img}>
-                        <img src={tile.img} alt={tile.title} />
-                        <GridListTileBar
-                            title={tile.title}
-                            subtitle={<span>by: {tile.author}</span>}
-                            actionIcon={
-                                <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
-                                    <InfoIcon />
-                                </IconButton>
-                            }
-                        />
-                    </GridListTile>
-                ))}
+                {data}
             </GridList>
         </div>
     );

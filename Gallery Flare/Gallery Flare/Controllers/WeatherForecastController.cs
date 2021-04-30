@@ -10,6 +10,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using Gallery_Flare.Models;
+using Newtonsoft.Json;
+
 
 namespace Gallery_Flare.Controllers
 {
@@ -17,29 +23,50 @@ namespace Gallery_Flare.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        //private static readonly string[] Summaries = new[]
+        //{
+        //    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        //};
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        //private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-        {
-            _logger = logger;
-        }
+        //public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        //{
+        //    _logger = logger;
+        //}
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<string> GetAsync()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            IList<ImageModel> results = new List<ImageModel>();
+            try
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                var client = new MongoClient("mongodb+srv://jawad:jawad@cluster0.r6ob1.azure.mongodb.net/flare?retryWrites=true&w=majority");
+                var database = client.GetDatabase("flare");
+                var collection = database.GetCollection<BsonDocument>("images");
+                var documents = await collection.Find(new BsonDocument()).ToListAsync();
+                foreach (var doc in documents)
+                    results.Add(BsonSerializer.Deserialize<ImageModel>(doc));
+                return JsonConvert.SerializeObject(results);
+
+            }
+            catch (Exception e)
+            {
+                return JsonConvert.SerializeObject(results);
+            }
+        }
+
+        public async Task<int> PostToDbAsync(string fileName, string fileURL, string userID, string access)
+        {
+            var client = new MongoClient("mongodb+srv://jawad:jawad@cluster0.r6ob1.azure.mongodb.net/flare?retryWrites=true&w=majority");
+
+            var database = client.GetDatabase("flare");
+            var collection = database.GetCollection<BsonDocument>("images");
+
+            var command = new BsonDocument { { "title", fileName }, { "img", fileURL }, { "author", userID }, { "access", access } };
+            await collection.InsertOneAsync(command);
+            var id = command;
+            return 1;
         }
 
         [HttpPost]
@@ -54,6 +81,9 @@ namespace Gallery_Flare.Controllers
 
                 await blob.UploadFromStreamAsync(file.OpenReadStream());
                 var blobUrl = blob.Uri.AbsoluteUri;
+
+                await PostToDbAsync(file.FileName, blobUrl, "jawadjawid", access);
+
                 return Ok("uploaded");
 
             } catch(Exception e)

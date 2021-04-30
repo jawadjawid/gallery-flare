@@ -1,10 +1,8 @@
 ﻿const tileData = [
     {
-        img: 'https://material-ui.com/static/images/grid-list/olive.jpg',
+        img: 'https://galleryflare.blob.core.windows.net/flare/covid%20vacc.png_1619736433240',
         title: 'Breakfast',
         author: 'jill111',
-        cols: 2,
-        featured: true,
     },
     {
         img: 'https://galleryflare.blob.core.windows.net/flare/jawad.jpg',
@@ -16,12 +14,7 @@
         title: 'Camera',
         author: 'Danson67',
     },
-    {
-        img: 'https://material-ui.com/static/images/grid-list/olive.jpg',
-        title: 'Morning',
-        author: 'fancycrave1',
-        featured: true,
-    },
+
     {
         img: '/static/images/grid-list/hats.jpg',
         title: 'Hats',
@@ -33,10 +26,9 @@
         author: 'fancycravel',
     },
     {
-        img: '/static/images/grid-list/vegetables.jpg',
+        img: 'https://material-ui.com/static/images/grid-list/olive.jpg',
         title: 'Vegetables',
         author: 'jill111',
-        cols: 2,
     },
     {
         img: '/static/images/grid-list/plant.jpg',
@@ -56,7 +48,6 @@
     {
         img: '/static/images/grid-list/star.jpg',
         title: 'Sea star',
-        cols: 2,
         author: '821292',
     },
     {
