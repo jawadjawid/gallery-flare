@@ -41,7 +41,7 @@ export default class DropZone extends Component {
             formData.append('file', files[i]);
             formData.append('access', String(this.state.accessValue));
             console.log()
-            fetch('weatherforecast', {
+            fetch('Upload', {
                 method: 'POST',
                 body: formData
             })

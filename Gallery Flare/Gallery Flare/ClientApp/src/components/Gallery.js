@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -7,13 +6,9 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Delete';
-import tileData from './tileData';
-import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        //display: 'flex',
-        //flexWrap: 'wrap',
         justifyContent: 'space-around',
         overflow: 'hidden',
         backgroundColor: theme.palette.background.paper,
@@ -28,43 +23,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-/**
- * The example data is structured as follows:
- *
- * import image from 'path/to/image.jpg';
- * [etc...]
- *
- * const tileData = [
- *   {
- *     img: image,
- *     title: 'Image',
- *     author: 'author',
- *   },
- *   {
- *     [etc...]
- *   },
- * ];
- */
-
-
 const Gallery = () => {
     const [forecasts, setForecasts] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
     const [hasLoaded, setHasLoaded] = React.useState(false);
+    const [startedLoading, setstartedLoading] = React.useState(false);
 
     const classes = useStyles();
 
-    const populateWeatherData = async () => {
+    const populateGallery = async () => {
+        setstartedLoading(true);
         const response = await fetch('weatherforecast');
         const data = await response.json();
-
         setForecasts(data);
-        setLoading(false);
+        setHasLoaded(true);
     }
 
-    if (!hasLoaded) {
-        populateWeatherData();
-        setHasLoaded(true);
+    if (!startedLoading) {
+        populateGallery();
     }
 
     React.useEffect(() => console.log(forecasts.length), [forecasts]);
@@ -85,6 +60,8 @@ const Gallery = () => {
                 />
             </GridListTile>
         ));
+    } else if (hasLoaded) {
+        data = <h1>No Images...</h1>;
     } else {
         data = <h1>Loading Images...</h1>;
     }

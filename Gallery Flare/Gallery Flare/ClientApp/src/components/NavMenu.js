@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
-import Button from '@material-ui/core/Button';
-import UploadModal from './UploadModal';
 import DropZone from './DropZone';
 
 export class NavMenu extends Component {
