@@ -2,6 +2,9 @@
 import { DropzoneDialog } from 'material-ui-dropzone'
 import Button from '@material-ui/core/Button';
 import Access from './Access.js';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import { makeStyles } from '@material-ui/core/styles';
 
 export default class DropZone extends Component {
     constructor(props) {
@@ -9,12 +12,17 @@ export default class DropZone extends Component {
         this.accessDone = this.accessDone.bind(this)
         this.handleAccessOpen = this.handleAccessOpen.bind(this)
         this.setAccessValue = this.setAccessValue.bind(this)
+        this.handleNotifacationSuccessClose = this.handleNotifacationSuccessClose.bind(this)
+        this.handleNotifacationFailClose = this.handleNotifacationFailClose.bind(this)
 
         this.state = {
             open: false,
             files: [],
             accessOpen: false,
-            accessValue: "public"
+            accessValue: "public",
+            notificationSuccessOpen: false,
+            notificationFailOpen: false,
+            failMsg: ""
         };
     }
 
@@ -36,33 +44,39 @@ export default class DropZone extends Component {
             open: false
         });
 
-
+        let failedFilesArray = [];
+        let numSuccess = 0;
+        let failedFiles = "";
         for (var i = 0; i < files.length; i++) {
             var formData = new FormData();
             formData.append('file', files[i]);
             formData.append('access', String(this.state.accessValue));
-            console.log()
+
             await fetch('Upload', {
                 method: 'POST',
                 body: formData
-            })
+            }).then((response) => {
+                if (response.ok) {
+                    numSuccess++;
+                } else {
+                    throw new Error('Something went wrong');
+                }
+            }).catch(() => {
+                failedFilesArray.push(files[i].name);                
+                failedFiles += failedFilesArray.join(", ");
+            }) 
         }
 
-        //async function processArray(array) {
-        //    for (var i = 0; i < files.length; i++) {
-        //        var formData = new FormData();
-        //        formData.append('file', files[i]);
-        //        formData.append('access', String(this.state.accessValue));
-        //        console.log()
-        //        await fetch('Upload', {
-        //            method: 'POST',
-        //            body: formData
-        //        })
-        //    }
-        //}
-
-        //processArray(files);
-
+        if (numSuccess == files.length) {
+            this.setState({
+                notificationSuccessOpen: true
+            });
+        } else {
+            this.setState({
+                notificationFailOpen: true,
+                failMsg: failedFiles,
+            });
+        }
     }
 
     handleOpen() {
@@ -84,9 +98,33 @@ export default class DropZone extends Component {
         });
     }
 
+    handleNotifacationSuccessClose() {
+        this.setState({
+            notificationSuccessOpen: false 
+        });
+    }
+
+    handleNotifacationFailClose() {
+        this.setState({
+            notificationFailOpen: false
+        });
+    }
+
     render() {
         return (
             <div>
+                <Snackbar open={this.state.notificationSuccessOpen} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={this.handleNotifacationSuccessClose}>
+                    <MuiAlert elevation={6} variant="filled" onClose={this.handleNotifacationSuccessClose} severity="success">
+                        All files uploaded successfully!
+                    </MuiAlert>
+                </Snackbar>
+
+                <Snackbar open={this.state.notificationFailOpen} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={this.handleNotifacationFailClose}>
+                    <MuiAlert elevation={6} variant="filled" onClose={this.handleNotifacationFailClose} severity="error">
+                        {this.state.failMsg + " failed to upload"}
+                    </MuiAlert>
+                </Snackbar>
+
                 <Access accessDone={this.accessDone} isOpen={this.state.accessOpen} handleAccessOpen={this.handleAccessOpen} setAccessValue={this.setAccessValue} accessValue={this.accessValue} />
 
                 <DropzoneDialog

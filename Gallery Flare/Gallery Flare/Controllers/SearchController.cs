@@ -16,7 +16,7 @@ namespace Gallery_Flare.Controllers
         private static string _baseUri = "https://api.bing.microsoft.com/v7.0/images/visualsearch";
 
         private static string _insightsToken = null;
-        private static string _imageUrl = "https://upload.wikimedia.org/wikipedia/commons/0/0c/Chris_Hadfield_2011.jpg";
+        private static string _imageUrl = "";
 
         private static string _clientIdHeader = null;
 
@@ -28,7 +28,6 @@ namespace Gallery_Flare.Controllers
         {
             _imageUrl = url;
             allNames = "";
-
         }
 
         public async Task<string> MostCommonTags(int top)
@@ -80,7 +79,7 @@ namespace Gallery_Flare.Controllers
         {
             try
             {
-                var queryString = MKT_PARAMETER + "en-us";
+                var queryString = MKT_PARAMETER + "en-ca";
                 using (var postContent = new MultipartFormDataContent("boundary_" + DateTime.Now.ToString(CultureInfo.InvariantCulture)))
                 {
                     var visualSearchParams = new Dictionary<string, object>()
@@ -104,7 +103,6 @@ namespace Gallery_Flare.Controllers
                     using (var jsonContent = new StringContent(JsonConvert.SerializeObject(visualSearchParams,
                         new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })))
                     {
-
                         var dispositionHeader = new ContentDispositionHeaderValue("form-data");
                         dispositionHeader.Name = "knowledgeRequest";
                         jsonContent.Headers.ContentDisposition = dispositionHeader;
@@ -129,7 +127,7 @@ namespace Gallery_Flare.Controllers
                         }
                         else
                         {
-                            PrintErrors(response.Headers, searchResponse);
+                            throw new Exception();
                         }
                     }
                 }
@@ -144,14 +142,11 @@ namespace Gallery_Flare.Controllers
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _subscriptionKey);
-
             return (await client.PostAsync(_baseUri + queryString, postContent));
         }
 
         static void PrintInsights(Dictionary<string, object> response)
         {
-            Console.WriteLine("The response contains the following insights:\n");
-
             var tags = response["tags"] as Newtonsoft.Json.Linq.JToken;
 
             foreach (Newtonsoft.Json.Linq.JToken tag in tags)
@@ -165,7 +160,6 @@ namespace Gallery_Flare.Controllers
                 else
                 {
                     allNames += $"{displayName} ";
-                    Console.WriteLine("\nTag: {0}\n", (string)tag["displayName"]);
                 }
             }
         }
@@ -182,53 +176,8 @@ namespace Gallery_Flare.Controllers
                     foreach (Newtonsoft.Json.Linq.JToken data in action["data"]["value"])
                     {
                         allNames += $"{(string)data["name"]} ";
-
                     }
                 }           
-            }
-        }
-
-        static void PrintErrors(HttpResponseHeaders headers, Dictionary<String, object> response)
-        {
-            Console.WriteLine("The response contains the following errors:\n");
-
-            object value;
-
-            if (response.TryGetValue("error", out value))  // typically 401, 403
-            {
-                PrintError(response["error"] as Newtonsoft.Json.Linq.JToken);
-            }
-            else if (response.TryGetValue("errors", out value))
-            {
-                foreach (Newtonsoft.Json.Linq.JToken error in response["errors"] as Newtonsoft.Json.Linq.JToken)
-                {
-                    PrintError(error);
-                }
-
-                IEnumerable<string> headerValues;
-                if (headers.TryGetValues("BingAPIs-TraceId", out headerValues))
-                {
-                    Console.WriteLine("\nTrace ID: " + headerValues.FirstOrDefault());
-                }
-            }
-
-        }
-
-        static void PrintError(Newtonsoft.Json.Linq.JToken error)
-        {
-            string value = null;
-
-            Console.WriteLine("Code: " + error["code"]);
-            Console.WriteLine("Message: " + error["message"]);
-
-            if ((value = (string)error["parameter"]) != null)
-            {
-                Console.WriteLine("Parameter: " + value);
-            }
-
-            if ((value = (string)error["value"]) != null)
-            {
-                Console.WriteLine("Value: " + value);
             }
         }
     }

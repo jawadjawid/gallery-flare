@@ -30,10 +30,10 @@ namespace Gallery_Flare.Controllers
 
 
         [HttpPost]
-        public async Task<OkObjectResult> PostAsync([FromForm] IFormFile file, [FromForm] string access)
+        public async Task<ActionResult> PostAsync([FromForm] IFormFile file, [FromForm] string access)
         {
             try
-            {
+            {     
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=galleryflare;AccountKey=qEzmObr5GKhv8XTXXl0PEOAQ3J/hVZM+tbpllTbRv1uHK76OCeeD0AufUsyoguYeaidqTWKEkl2nbB1LMK6wLw==;EndpointSuffix=core.windows.net");
                 CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer container = blobClient.GetContainerReference("flare");
@@ -52,7 +52,7 @@ namespace Gallery_Flare.Controllers
             }
             catch (Exception e)
             {
-                return Ok("fail");
+                return NotFound();
             }
         }
 
