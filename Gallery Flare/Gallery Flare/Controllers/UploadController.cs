@@ -15,14 +15,14 @@ namespace Gallery_Flare.Controllers
     [Route("[controller]")]
     public class UploadController : Controller
     {
-        public async Task<int> PostToDbAsync(string fileName, string fileURL, string userID, string access)
+        public async Task<int> PostToDbAsync(string fileName, string fileURL, string userID, string access, string tags)
         {
             var client = new MongoClient("mongodb+srv://jawad:jawad@cluster0.r6ob1.azure.mongodb.net/flare?retryWrites=true&w=majority");
 
             var database = client.GetDatabase("flare");
             var collection = database.GetCollection<BsonDocument>("images");
 
-            var command = new BsonDocument { { "title", fileName }, { "img", fileURL }, { "author", userID }, { "access", access } };
+            var command = new BsonDocument { { "title", fileName }, { "img", fileURL }, { "author", userID }, { "access", access }, { "tags", tags } };
             await collection.InsertOneAsync(command);
 
             return 0;
@@ -42,7 +42,10 @@ namespace Gallery_Flare.Controllers
                 await blob.UploadFromStreamAsync(file.OpenReadStream());
                 var blobUrl = blob.Uri.AbsoluteUri;
 
-                await PostToDbAsync(file.FileName, blobUrl, "jawadjawid", access);
+                SearchController search = new SearchController(blobUrl);
+                string tags = await search.MostCommonTags(20);
+
+                await PostToDbAsync(file.FileName, blobUrl, "jawadjawid", access, tags);
 
                 return Ok("uploaded");
 

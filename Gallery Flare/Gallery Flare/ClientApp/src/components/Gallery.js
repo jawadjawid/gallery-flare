@@ -32,7 +32,7 @@ const Gallery = () => {
 
     const populateGallery = async () => {
         setstartedLoading(true);
-        const response = await fetch('weatherforecast');
+        const response = await fetch('Gallery');
         const data = await response.json();
         setForecasts(data);
         setHasLoaded(true);

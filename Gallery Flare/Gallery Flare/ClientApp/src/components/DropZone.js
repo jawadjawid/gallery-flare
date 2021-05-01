@@ -30,22 +30,39 @@ export default class DropZone extends Component {
         });
     }
 
-    handleSave(files) {
+    async handleSave(files) {
         this.setState({
             files: files,
             open: false
         });
+
 
         for (var i = 0; i < files.length; i++) {
             var formData = new FormData();
             formData.append('file', files[i]);
             formData.append('access', String(this.state.accessValue));
             console.log()
-            fetch('Upload', {
+            await fetch('Upload', {
                 method: 'POST',
                 body: formData
             })
-        }     
+        }
+
+        //async function processArray(array) {
+        //    for (var i = 0; i < files.length; i++) {
+        //        var formData = new FormData();
+        //        formData.append('file', files[i]);
+        //        formData.append('access', String(this.state.accessValue));
+        //        console.log()
+        //        await fetch('Upload', {
+        //            method: 'POST',
+        //            body: formData
+        //        })
+        //    }
+        //}
+
+        //processArray(files);
+
     }
 
     handleOpen() {

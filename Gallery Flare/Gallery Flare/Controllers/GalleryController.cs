@@ -13,7 +13,7 @@ namespace Gallery_Flare.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class GalleryController : ControllerBase
     {
         [HttpGet]
         public async Task<string> GetAsync()
