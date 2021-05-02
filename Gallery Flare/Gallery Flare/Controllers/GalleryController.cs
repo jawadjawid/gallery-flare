@@ -21,15 +21,11 @@ namespace Gallery_Flare.Controllers
             IList<ImageModel> results = new List<ImageModel>();
             try
             {
-                var client = new MongoClient("mongodb+srv://jawad:jawad@cluster0.r6ob1.azure.mongodb.net/flare?retryWrites=true&w=majority");
-                var database = client.GetDatabase("flare");
-                var collection = database.GetCollection<BsonDocument>("images");
-                var documents = await collection.Find(new BsonDocument()).ToListAsync();
-                foreach (var doc in documents)
-                    results.Add(BsonSerializer.Deserialize<ImageModel>(doc));
+                Database database = new Database("images");
+                results = await database.GetFromDbAsync();
                 return JsonConvert.SerializeObject(results);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return JsonConvert.SerializeObject(results);
             }

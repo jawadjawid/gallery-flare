@@ -12,5 +12,6 @@ namespace Gallery_Flare.Models
         public string img;
         public string title;
         public string author;
+        public string tags;
     }
 }

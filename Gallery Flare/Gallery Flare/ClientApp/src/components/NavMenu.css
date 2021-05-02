@@ -20,6 +20,13 @@ html {
 .uploadButton {
     display: flex;
     align-items: center;
+    margin: 2px;
+}
+
+.searchButton {
+    display: flex;
+    align-items: center;
+    margin: 2px;
 }
 
 

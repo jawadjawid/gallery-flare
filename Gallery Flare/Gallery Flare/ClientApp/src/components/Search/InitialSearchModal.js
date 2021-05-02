@@ -7,15 +7,14 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import { Form, Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
-import { RadioGroup } from '@material-ui/core';
-import { Radio } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 
 import { FormControlLabel } from '@material-ui/core';
 
 
 
-const Access = (props) => {
-    //const [accessValue, setaccessValue] = React.useState("public")
+const InitialSearchModal = (props) => {
 
     const handleChange = (event) => {
         props.setAccessValue(event.target.value);
@@ -23,33 +22,34 @@ const Access = (props) => {
 
     return (
         <div>
-            <Button className="btn btn-primary btn-sm" color="primary" onClick={props.handleAccessOpen}>
-                Upload
+            <Button className="btn btn-sm" color="green" onClick={props.handleAccessOpen}>
+                Search
             </Button>
             <Dialog
                 open={props.isOpen}
                 onClose={props.handleAccessOpen}
             >
                 <DialogTitle>
-                    Access to photos
+                    Search
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Here you can decide who can see your pictures!
+                        Please use one word to have good results
                     </DialogContentText>
-                   
-                    <RadioGroup defaultValue="public" aria-label="access-value" name="customized-radios" value={props.accessValue} onChange={handleChange}>
-                        <FormControlLabel value="public" control={<Radio />} label="Public" />
-                        <FormControlLabel value="private" control={<Radio />} label="Private" />
-                    </RadioGroup>
-           
+
+                    <div>
+                        <TextField onChange={handleChange} id="standard-basic" label="Image Tag" />
+                    </div>
+                    <br />
+                    <a onClick={props.searchByImage} href="#">Search by image?</a>
+
                 </DialogContent>
                 <DialogActions>
-                    <Button className="btn btn-light btn-sm" onClick={ props.handleAccessOpen}>
+                    <Button className="btn btn-light btn-sm" onClick={props.handleAccessOpen}>
                         Cancel
-                </Button>
-                    <Button className="btn btn-primary btn-sm" onClick={props.accessDone} color="primary">
-                        Next
+                    </Button>
+                    <Button className="btn btn-primary btn-sm" onClick={props.searchByText} color="primary">
+                        Search
                  </Button>
                 </DialogActions>
             </Dialog>
@@ -57,4 +57,4 @@ const Access = (props) => {
     );
 }
 
-export default Access;
+export default InitialSearchModal;

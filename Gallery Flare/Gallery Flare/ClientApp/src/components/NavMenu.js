@@ -3,6 +3,8 @@ import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLi
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 import DropZone from './DropZone';
+import InitialSearchModal from './Search/InitialSearchModal';
+import SearchByImageModal from './Search/SearchByImageModal';
 
 export class NavMenu extends Component {
     static displayName = NavMenu.name;
@@ -49,7 +51,10 @@ export class NavMenu extends Component {
                                     </Button>
                                     <UploadModal open={this.state.open} close={handleClose} />*/}
                                     <DropZone/>
-                                </div>                        
+                                </div> 
+                                <div className="uploadButton">
+                                    <SearchByImageModal />
+                                </div>  
                             </ul>
                         </Collapse>
                     </Container>
