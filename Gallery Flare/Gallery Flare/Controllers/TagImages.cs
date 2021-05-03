@@ -49,10 +49,13 @@ namespace Gallery_Flare.Controllers
             }
 
             int numOfDesiredTags = 0;
-            while (numOfDesiredTags < top && numOfDesiredTags < arr.Length)
+            int iterations = 0;
+
+            while (numOfDesiredTags < top && iterations < arr.Length)
             {
                 String key = "";
                 int value = 0;
+                iterations++;
                 foreach (KeyValuePair<String, int> me in hs)
                 {
                     if (me.Value > value)
@@ -62,7 +65,9 @@ namespace Gallery_Flare.Controllers
                     }
                 }
                 hs[key] = 0;
-                if (!mostCommonResults.Any(s => s.Equals(key, StringComparison.OrdinalIgnoreCase)))
+                Database database = new Database("words");
+                string irrelevantTags = await database.GetIrrelevantTags();
+                if (!mostCommonResults.Any(s => s.Equals(key, StringComparison.OrdinalIgnoreCase)) && !irrelevantTags.ToLower().Contains(key.ToLower()))
                 {
                     mostCommonResults.Add(key.ToLower());
                     numOfDesiredTags++;

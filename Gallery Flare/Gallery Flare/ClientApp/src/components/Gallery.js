@@ -6,6 +6,7 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Delete';
+import { common } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Gallery = () => {
+const Gallery = (props) => {
     const [forecasts, setForecasts] = React.useState([]);
     const [hasLoaded, setHasLoaded] = React.useState(false);
     const [startedLoading, setstartedLoading] = React.useState(false);
@@ -38,14 +39,13 @@ const Gallery = () => {
         setHasLoaded(true);
     }
 
-    if (!startedLoading) {
+    if (!startedLoading && props.location.state == undefined ) {
         populateGallery();
     }
 
-    React.useEffect(() => console.log(forecasts.length), [forecasts]);
     let data;
 
-    if (forecasts.length != 0) {
+    if (forecasts.length != 0 && props.location.state == undefined) {
         data = forecasts.map((tile) => (
             <GridListTile key={tile.img}>
                 <img src={tile.img} alt={tile.title} />
@@ -60,7 +60,24 @@ const Gallery = () => {
                 />
             </GridListTile>
         ));
-    } else if (hasLoaded) {
+    } else if (props.location.state != undefined && props.location.state.data.length != 0) {
+        data = props.location.state.data.map((tile) => (
+            <GridListTile key={tile.img}>
+                <img src={tile.img} alt={tile.title} />
+                <GridListTileBar
+                    title={tile.title}
+                    subtitle={<span>by: {tile.author}</span>}
+                    actionIcon={
+                        <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
+                            <InfoIcon />
+                        </IconButton>
+                    }
+                />
+            </GridListTile>
+        ));
+        window.history.replaceState(null, '');
+    }
+    else if (hasLoaded || props.location.state != undefined) {
         data = <h1>No Images...</h1>;
     } else {
         data = <h1>Loading Images...</h1>;

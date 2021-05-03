@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import LoadingScreen from 'react-loading-screen';
 
 export class Home extends Component {
   static displayName = Home.name;
 
   render () {
-    return (
-      <div>
+      return (
+          <div>
+
+
         <h1>Hello, world!</h1>
         <p>Welcome to your new single-page application, built with:</p>
         <ul>

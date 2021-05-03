@@ -5,8 +5,13 @@ import InitialSearchModal from './InitialSearchModal'
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
+import { Redirect } from "react-router";
+import { withRouter } from 'react-router-dom';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-export default class SearchByImageModal extends Component {
+import LoadingScreen from 'react-loading-screen';
+
+class SearchByImageModal extends Component {
     constructor(props) {
         super(props);
         this.searchByImage = this.searchByImage.bind(this)
@@ -15,8 +20,7 @@ export default class SearchByImageModal extends Component {
         this.handleNotifacationSuccessClose = this.handleNotifacationSuccessClose.bind(this)
         this.handleNotifacationFailClose = this.handleNotifacationFailClose.bind(this)
         this.searchByText = this.searchByText.bind(this)
-
-        
+      
         this.state = {
             open: false,
             files: [],
@@ -24,13 +28,16 @@ export default class SearchByImageModal extends Component {
             searchQuery: "",
             notificationSuccessOpen: false,
             notificationFailOpen: false,
-            failMsg: ""
+            failMsg: "",
+            doneSearch: false,
+            data: [],
+            loading: false,
         };
     }
 
     handleClose() {
         this.setState({
-            open: false
+            open: false,
         });
     }
 
@@ -43,7 +50,8 @@ export default class SearchByImageModal extends Component {
     async handleSave(files) {
         this.setState({
             files: files,
-            open: false
+            open: false,
+            loading: true
         });
 
         let failedFilesArray = [];
@@ -52,14 +60,20 @@ export default class SearchByImageModal extends Component {
         for (var i = 0; i < files.length; i++) {
             var formData = new FormData();
             formData.append('file', files[i]);
-            formData.append('access', String(this.state.searchQuery));
 
-            await fetch('Upload', {
+            const res = await fetch('Search', {
                 method: 'POST',
                 body: formData
             }).then((response) => {
                 if (response.ok) {
                     numSuccess++;
+                    response.json().then(json => {
+                        this.props.history.push({ pathname: '/gallery', state: { startedLoading: true, data: json, hasLoaded: true } });
+                    });
+                    this.setState({
+                        loading: false,
+                    });
+
                 } else {
                     throw new Error('Something went wrong');
                 }
@@ -94,25 +108,22 @@ export default class SearchByImageModal extends Component {
     }
 
     searchByImage() {
-        console.log(this.state.searchQuery)
         this.setState({
             accessOpen: false,
             open: true,
         });
     }
 
-    searchByText() {
-        fetch('Search/' + this.state.searchQuery, {
-            method: 'GET',
-        }).then((response) => {
-            if (response.ok) {
+    async searchByText() {
+        //let { history } = this.props
 
-            } else {
-                throw new Error('Something went wrong');
-            }
-        }).catch(() => {
-
-        })
+         const response = await fetch('Search/' + this.state.searchQuery);
+         const data = await response.json();
+         this.setState({
+             data: data,
+             accessOpen: false,
+         });
+        this.props.history.push({ pathname: '/gallery', state: { startedLoading: true, data: this.state.data, hasLoaded: true } });
     }
 
     handleNotifacationSuccessClose() {
@@ -130,6 +141,7 @@ export default class SearchByImageModal extends Component {
     render() {
         return (
             <div>
+
                 <Snackbar open={this.state.notificationSuccessOpen} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={this.handleNotifacationSuccessClose}>
                     <MuiAlert elevation={6} variant="filled" onClose={this.handleNotifacationSuccessClose} severity="success">
                         All files uploaded successfully!
@@ -142,7 +154,7 @@ export default class SearchByImageModal extends Component {
                     </MuiAlert>
                 </Snackbar>
 
-                <InitialSearchModal searchByImage={this.searchByImage} isOpen={this.state.accessOpen} handleAccessOpen={this.handleAccessOpen} setAccessValue={this.setAccessValue} searchQuery={this.searchQuery} searchByText={this.searchByText}/>
+                <InitialSearchModal loading={this.state.loading } searchByImage={this.searchByImage} isOpen={this.state.accessOpen} handleAccessOpen={this.handleAccessOpen} setAccessValue={this.setAccessValue} searchQuery={this.searchQuery} searchByText={this.searchByText}/>
 
                 <DropzoneDialog
                     open={this.state.open}
@@ -157,3 +169,5 @@ export default class SearchByImageModal extends Component {
         );
     }
 }
+
+export default withRouter(SearchByImageModal);
