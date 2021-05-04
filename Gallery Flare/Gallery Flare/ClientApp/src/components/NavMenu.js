@@ -43,18 +43,24 @@ export class NavMenu extends Component {
                                 </NavItem>
 
                                 <NavItem>
+                                    <NavLink tag={Link} className="text-dark" to="/login">Log In</NavLink>
+                                </NavItem>
+
+                                <NavItem>
+                                    <NavLink tag={Link} className="text-dark" to="/signup">Sign Up</NavLink>
+                                </NavItem>
+
+                                <NavItem>
                                     <NavLink tag={Link} className="text-dark" to="/gallery">Public Gallery</NavLink>
                                 </NavItem>
                                 <div className="uploadButton">
-                                    {/*<Button className="btn btn-primary btn-sm" variant="contained" color="primary" size="small" onClick={handleOpen}>
-                                        Upload
-                                    </Button>
-                                    <UploadModal open={this.state.open} close={handleClose} />*/}
                                     <DropZone/>
                                 </div> 
                                 <div className="uploadButton">
                                     <SearchByImageModal />
                                 </div>  
+
+
                             </ul>
                         </Collapse>
                     </Container>

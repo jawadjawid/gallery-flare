@@ -22,8 +22,7 @@ const InitialSearchModal = (props) => {
     }
 
     return (
-        <div>
-    
+        <div>   
             <Button className="btn btn-sm" color="green" onClick={props.handleAccessOpen}>
                 Search
             </Button>

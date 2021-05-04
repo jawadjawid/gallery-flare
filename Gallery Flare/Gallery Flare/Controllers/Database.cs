@@ -31,7 +31,7 @@ namespace Gallery_Flare.Controllers
             await collection.InsertOneAsync(command);
         }
 
-        public async Task<IList<ImageModel>> GetImagesFromDbAsync(string author = "any", string access = "any", string tags = "any")
+        public async Task<IList<ImageModel>> GetImagesFromDbAsync(string author = "any", string access = "any", string tags = "any", int minumumMatchingTags = 3)
         {
             var builder = Builders<BsonDocument>.Filter;
             var authorFilter = author == "any" ? builder.Empty : builder.Eq("author", author);
@@ -39,7 +39,7 @@ namespace Gallery_Flare.Controllers
 
             IList<ImageModel> results = new List<ImageModel>();
             IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(collectionName);
-            var documents = await collection.Find(authorFilter & accessFilter).ToListAsync();
+            var documents = await collection.Find(authorFilter & accessFilter).Sort(Builders<BsonDocument>.Sort.Descending("_id")).ToListAsync();
             foreach (var doc in documents)
                 results.Add(BsonSerializer.Deserialize<ImageModel>(doc));
 
@@ -47,12 +47,47 @@ namespace Gallery_Flare.Controllers
             if (tags != "any")
             {
                 string[] tagsToFind = tags.Split(",");
-                foreach (string tagToFind in tagsToFind)
+                if (tagsToFind.Length == 1)
+                {
                     foreach (ImageModel result in results)
-                        if (result.tags.ToLower().Contains(tagToFind.ToLower()) && !filtieredResults.Contains(result) && tagToFind != "")
+                        if (result.tags.ToLower().Contains(tagsToFind[0].ToLower()))
                             filtieredResults.Add(result);
+                }
+                  
+                else if (tagsToFind.Length > 1)
+                            filtieredResults =  SearchByTags(results, tagsToFind, minumumMatchingTags);               
             }
             return tags == "any" ? results : filtieredResults;
+        }
+
+        public IList<ImageModel> SearchByTags(IList<ImageModel> results, string[] tagsToFind, int minumumMatchingTags)
+        {
+            IDictionary<ImageModel, int> potentialMatches = new Dictionary<ImageModel, int>();
+            IList<ImageModel> filtieredResults = new List<ImageModel>();
+            foreach (string tagToFind in tagsToFind)
+            {
+                foreach (ImageModel result in results)
+                {
+                    if (result.tags.ToLower().Contains(tagToFind.ToLower()) /*&& !filtieredResults.Contains(result)*/ && tagToFind != "")
+                    {
+                        if (potentialMatches.ContainsKey(result))
+                        {
+                            potentialMatches[result] += 1;
+                        }
+                        else
+                        {
+                            potentialMatches.Add(result, 1);
+                        }
+                    }
+                }
+            }
+
+            foreach (KeyValuePair<ImageModel, int> potentialMatch in potentialMatches)
+            {
+                if (potentialMatch.Value >= minumumMatchingTags)
+                    filtieredResults.Add(potentialMatch.Key);
+            }
+            return filtieredResults;
         }
 
         public async Task<string> GetIrrelevantTags()

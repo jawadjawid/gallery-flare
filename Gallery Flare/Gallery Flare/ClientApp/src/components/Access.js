@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import { Form, Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
 import { RadioGroup } from '@material-ui/core';
 import { Radio } from '@material-ui/core';
+import LoadingScreen from 'react-loading-screen';
 
 import { FormControlLabel } from '@material-ui/core';
 
@@ -27,7 +28,7 @@ const Access = (props) => {
                 Upload
             </Button>
             <Dialog
-                open={props.isOpen}
+                open={props.isOpen || props.loading}
                 onClose={props.handleAccessOpen}
             >
                 <DialogTitle>
@@ -52,6 +53,13 @@ const Access = (props) => {
                         Next
                  </Button>
                 </DialogActions>
+                <LoadingScreen
+                    loading={props.loading}
+                    bgColor='#f1f1f1'
+                    spinnerColor='#9ee5f8'
+                    textColor='#676767'
+                >
+                </LoadingScreen>
             </Dialog>
         </div>
     );

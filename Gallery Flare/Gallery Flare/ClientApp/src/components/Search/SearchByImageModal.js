@@ -144,7 +144,7 @@ class SearchByImageModal extends Component {
 
                 <Snackbar open={this.state.notificationSuccessOpen} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={this.handleNotifacationSuccessClose}>
                     <MuiAlert elevation={6} variant="filled" onClose={this.handleNotifacationSuccessClose} severity="success">
-                        All files uploaded successfully!
+                        Success!
                     </MuiAlert>
                 </Snackbar>
 
@@ -163,7 +163,7 @@ class SearchByImageModal extends Component {
                     showPreviews={true}
                     maxFileSize={5000000}
                     onClose={this.handleClose.bind(this)}
-                    filesLimit={9999999999}
+                    filesLimit={1}
                 />
             </div>
         );

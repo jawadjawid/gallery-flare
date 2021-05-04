@@ -22,7 +22,8 @@ export default class DropZone extends Component {
             accessValue: "public",
             notificationSuccessOpen: false,
             notificationFailOpen: false,
-            failMsg: ""
+            failMsg: "",
+            loading: false
         };
     }
 
@@ -41,7 +42,8 @@ export default class DropZone extends Component {
     async handleSave(files) {
         this.setState({
             files: files,
-            open: false
+            open: false,
+            loading: true
         });
 
         let failedFilesArray = [];
@@ -58,6 +60,7 @@ export default class DropZone extends Component {
             }).then((response) => {
                 if (response.ok) {
                     numSuccess++;
+          
                 } else {
                     throw new Error('Something went wrong');
                 }
@@ -66,6 +69,10 @@ export default class DropZone extends Component {
                 failedFiles += failedFilesArray.join(", ");
             }) 
         }
+
+        this.setState({
+            loading: false,
+        });
 
         if (numSuccess == files.length) {
             this.setState({
@@ -77,6 +84,7 @@ export default class DropZone extends Component {
                 failMsg: failedFiles,
             });
         }
+
     }
 
     handleOpen() {
@@ -125,7 +133,7 @@ export default class DropZone extends Component {
                     </MuiAlert>
                 </Snackbar>
 
-                <Access accessDone={this.accessDone} isOpen={this.state.accessOpen} handleAccessOpen={this.handleAccessOpen} setAccessValue={this.setAccessValue} accessValue={this.accessValue} />
+                <Access loading={this.state.loading} accessDone={this.accessDone} isOpen={this.state.accessOpen} handleAccessOpen={this.handleAccessOpen} setAccessValue={this.setAccessValue} accessValue={this.accessValue} />
 
                 <DropzoneDialog
                     open={this.state.open}

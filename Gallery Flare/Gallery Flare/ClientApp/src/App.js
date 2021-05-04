@@ -4,7 +4,8 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 
 import Gallery from './components/Gallery';
-
+import SignInSide from './components/Auth/SignIn'
+import SignUp from './components/Auth/SignUp'
 import './custom.css'
 
 export default class App extends Component {
@@ -15,6 +16,8 @@ export default class App extends Component {
             <Layout>
                 <Route exact path='/' component={Home} />
                 <Route path='/gallery' component={Gallery} />
+                <Route path='/login' component={SignInSide} />
+                <Route path='/signup' component={SignUp} />
             </Layout>
         );
     }

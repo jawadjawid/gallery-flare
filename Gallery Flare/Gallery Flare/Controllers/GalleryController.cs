@@ -22,7 +22,7 @@ namespace Gallery_Flare.Controllers
             try
             {
                 Database database = new Database("images");
-                results = await database.GetImagesFromDbAsync();
+                results = await database.GetImagesFromDbAsync(access: "public");
                 return JsonConvert.SerializeObject(results);
             }
             catch (Exception)
