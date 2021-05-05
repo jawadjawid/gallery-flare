@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 function Copyright() {
     return (
@@ -46,11 +48,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SignUp() {
+export default function SignUp(props) {
     const classes = useStyles();
  
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [notificationSuccessOpen, setNotificationSuccessOpen] = React.useState(false);
+    const [notificationFailOpen, setNotificationFailOpen] = React.useState(false);
+    const [failMsg, setFailMsg] = React.useState("Fail. Please Try again!");
+
 
     const handleUserNameChange = (event) => {
 
@@ -62,10 +68,19 @@ export default function SignUp() {
 
     }
 
+    const handleNotifacationSuccessClose = () => {
+        setNotificationSuccessOpen(false)
+    }
+
+    const handleNotifacationFailClose = () => {
+        setNotificationFailOpen(false)
+    }
+
     const submit = (e) => {
         e.preventDefault();
         if (String(username) == "" || String(password) == "") {
-            console.log("sda");
+            setNotificationFailOpen(true)
+            setFailMsg("User Name and Password are mandatory!");
             return;
         }
 
@@ -78,17 +93,41 @@ export default function SignUp() {
              body: JSON.stringify({ username: String(username), password: String(password) }),
              'dataType': 'json',
         }).then((response) => {
-            if (response.ok) {
+            if (response.ok) {           
+                //props.history.push({ pathname: '/login' });
+                setNotificationSuccessOpen(true)
+
             } else {
+                response.json().then(msg => {
+                    if (msg == "User name is already taken!") {
+                        setFailMsg(msg);
+                    }
+                });
                 throw new Error('Something went wrong');
             }
         }).catch(() => {
-
+            setNotificationFailOpen(true)
         }) 
     }
 
     return (
+        //<div>
+      
+        //</div>
+
         <Container component="main" maxWidth="xs">
+            <Snackbar open={notificationSuccessOpen} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={handleNotifacationSuccessClose}>
+                <MuiAlert elevation={6} variant="filled" onClose={handleNotifacationSuccessClose} severity="success">
+                    Signup success!
+                    </MuiAlert>
+            </Snackbar>
+
+            <Snackbar open={notificationFailOpen} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={handleNotifacationFailClose}>
+                <MuiAlert elevation={6} variant="filled" onClose={handleNotifacationFailClose} severity="error">
+                    {failMsg}
+            </MuiAlert>
+            </Snackbar>
+
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>

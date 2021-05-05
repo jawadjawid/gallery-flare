@@ -23,8 +23,11 @@ namespace Gallery_Flare.Controllers
         {
             try
             {
-                string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.password);
+                UserModel userResult = await database.GetUser(user.username);
+                if (userResult != null)
+                    return NotFound("User name is already taken!");
 
+                string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.password);
                 await database.PostUser(user.username, passwordHash);
                 return Ok();
             } catch (Exception)
