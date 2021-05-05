@@ -7,7 +7,7 @@ using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
 using Gallery_Flare.Models;
 
-namespace Gallery_Flare.Controllers
+namespace Gallery_Flare.Controllers.Operations
 {
     public class Database
     {
@@ -53,9 +53,9 @@ namespace Gallery_Flare.Controllers
                         if (result.tags.ToLower().Contains(tagsToFind[0].ToLower()))
                             filtieredResults.Add(result);
                 }
-                  
+
                 else if (tagsToFind.Length > 1)
-                            filtieredResults =  SearchByTags(results, tagsToFind, minumumMatchingTags);               
+                    filtieredResults = SearchByTags(results, tagsToFind, minumumMatchingTags);
             }
             return tags == "any" ? results : filtieredResults;
         }

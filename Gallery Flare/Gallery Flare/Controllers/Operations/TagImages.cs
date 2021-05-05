@@ -8,7 +8,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Globalization;
 
-namespace Gallery_Flare.Controllers
+namespace Gallery_Flare.Controllers.Operations
 {
     public class TagImages
     {
@@ -30,11 +30,11 @@ namespace Gallery_Flare.Controllers
         public async Task<string> MostCommonTags(int top)
         {
             RunAsync().Wait();
-            IList<String> mostCommonResults = new List<String>();
+            IList<string> mostCommonResults = new List<string>();
 
-            String[] arr = allNames.Split(" ");
-            Dictionary<String, int> hs =
-           new Dictionary<String, int>();
+            string[] arr = allNames.Split(" ");
+            Dictionary<string, int> hs =
+           new Dictionary<string, int>();
 
             for (int i = 0; i < arr.Length; i++)
             {
@@ -53,10 +53,10 @@ namespace Gallery_Flare.Controllers
 
             while (numOfDesiredTags < top && iterations < arr.Length)
             {
-                String key = "";
+                string key = "";
                 int value = 0;
                 iterations++;
-                foreach (KeyValuePair<String, int> me in hs)
+                foreach (KeyValuePair<string, int> me in hs)
                 {
                     if (me.Value > value)
                     {
@@ -113,7 +113,7 @@ namespace Gallery_Flare.Controllers
                 postContent.Add(jsonContent);
 
                 HttpResponseMessage response = await MakeRequestAsync(queryString, postContent);
-        
+
                 var contentString = await response.Content.ReadAsStringAsync();
                 Dictionary<string, object> searchResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(contentString);
 
@@ -136,7 +136,7 @@ namespace Gallery_Flare.Controllers
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _subscriptionKey);
-            return (await client.PostAsync(_baseUri + queryString, postContent));
+            return await client.PostAsync(_baseUri + queryString, postContent);
         }
 
         static void StoreInsights(Dictionary<string, object> response)
@@ -171,7 +171,7 @@ namespace Gallery_Flare.Controllers
                     {
                         allNames += $"{(string)data["name"]} ";
                     }
-                }           
+                }
             }
         }
     }

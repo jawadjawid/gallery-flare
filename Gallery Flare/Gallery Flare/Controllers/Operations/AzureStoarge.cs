@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace Gallery_Flare.Controllers
+namespace Gallery_Flare.Controllers.Operations
 {
     public class AzureStoarge
     {
