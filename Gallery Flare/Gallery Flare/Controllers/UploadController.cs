@@ -27,7 +27,7 @@ namespace Gallery_Flare.Controllers
                 string tags = await search.MostCommonTags(20);
 
                 Database database = new Database("images");
-                await database.PostToDbAsync(file.FileName, blobUrl, "jawadjawid", access, tags);
+                await database.PostImageToDbAsync(file.FileName, blobUrl, "jawadjawid", access, tags);
 
                 return Ok("uploaded");
             }

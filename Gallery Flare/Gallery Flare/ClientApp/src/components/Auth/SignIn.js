@@ -17,8 +17,8 @@ function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
+            <Link color="inherit" href="#">
+                Gallery Flare. Jawad Jawid
       </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -59,6 +59,42 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignInSide() {
     const classes = useStyles();
+    const [username, setUsername] = React.useState("");
+    const [password, setPassword] = React.useState("");
+
+    const handleUserNameChange = (event) => {
+
+        setUsername(event.target.value);
+    }
+
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+
+    }
+
+    const submit = (e) => {
+        e.preventDefault();
+        if (String(username) == "" || String(password) == "") {
+            return;
+        }
+
+        fetch('Authentication/Login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: String(username), password: String(password) }),
+            'dataType': 'json',
+        }).then((response) => {
+            if (response.ok) {
+            } else {
+                throw new Error('Something went wrong');
+            }
+        }).catch(() => {
+
+        })
+    }
 
     return (
         <Grid container component="main" className={classes.root}>
@@ -77,11 +113,12 @@ export default function SignInSide() {
                             variant="outlined"
                             margin="normal"
                             required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
+                            fullWidth                          
+                            onChange={handleUserNameChange}
+                            id="username"
+                            label="User Name"
+                            name="username"
+                            autoComplete="username"
                             autoFocus
                         />
                         <TextField
@@ -89,33 +126,29 @@ export default function SignInSide() {
                             margin="normal"
                             required
                             fullWidth
+                            onChange={handlePasswordChange}
                             name="password"
                             label="Password"
                             type="password"
                             id="password"
                             autoComplete="current-password"
                         />
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                        />
+
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             color="primary"
                             className={classes.submit}
+                            onClick={submit}
+
                         >
                             Sign In
             </Button>
                         <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                </Link>
-                            </Grid>
+ 
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link href="/signup" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>

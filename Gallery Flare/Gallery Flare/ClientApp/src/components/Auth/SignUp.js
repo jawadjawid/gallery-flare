@@ -17,8 +17,8 @@ function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
+            <Link color="inherit" href="#">
+                Gallery Flare. Jawad Jawid
       </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -48,6 +48,44 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
     const classes = useStyles();
+ 
+    const [username, setUsername] = React.useState("");
+    const [password, setPassword] = React.useState("");
+
+    const handleUserNameChange = (event) => {
+
+        setUsername(event.target.value);
+    }
+
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+
+    }
+
+    const submit = (e) => {
+        e.preventDefault();
+        if (String(username) == "" || String(password) == "") {
+            console.log("sda");
+            return;
+        }
+
+        fetch('Authentication/SignUp', {
+             method: 'POST',
+             headers: {
+                 'Accept': 'application/json',
+                 'Content-Type': 'application/json'
+             },
+             body: JSON.stringify({ username: String(username), password: String(password) }),
+             'dataType': 'json',
+        }).then((response) => {
+            if (response.ok) {
+            } else {
+                throw new Error('Something went wrong');
+            }
+        }).catch(() => {
+
+        }) 
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -61,27 +99,16 @@ export default function SignUp() {
         </Typography>
                 <form className={classes.form} noValidate>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                autoComplete="fname"
-                                name="firstName"
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="firstName"
-                                label="First Name"
-                                autoFocus
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
-                                autoComplete="lname"
+                                id="username"
+                                onChange={handleUserNameChange}
+                                label="User Name"
+                                name="username"
+                                autoComplete="username"
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -89,17 +116,7 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
+                                onChange={handlePasswordChange}
                                 name="password"
                                 label="Password"
                                 type="password"
@@ -107,27 +124,23 @@ export default function SignUp() {
                                 autoComplete="current-password"
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <FormControlLabel
-                                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                label="I want to receive inspiration, marketing promotions and updates via email."
-                            />
-                        </Grid>
+
                     </Grid>
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
+                        onClick={submit}
                         className={classes.submit}
                     >
                         Sign Up
-          </Button>
+                </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link href="/login" variant="body2">
                                 Already have an account? Sign in
-              </Link>
+                            </Link>
                         </Grid>
                     </Grid>
                 </form>

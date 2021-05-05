@@ -24,14 +24,14 @@ namespace Gallery_Flare.Controllers
             database = client.GetDatabase(databaseName);
         }
 
-        public async Task PostToDbAsync(string fileName, string fileURL, string userID, string access, string tags)
+        public async Task PostImageToDbAsync(string fileName, string fileURL, string userID, string access, string tags)
         {
             IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(collectionName);
             var command = new BsonDocument { { "title", fileName }, { "img", fileURL }, { "author", userID }, { "access", access }, { "tags", tags } };
             await collection.InsertOneAsync(command);
         }
 
-        public async Task<IList<ImageModel>> GetImagesFromDbAsync(string author = "any", string access = "any", string tags = "any", int minumumMatchingTags = 3)
+        public async Task<IList<ImageModel>> GetImagesFromDbAsync(string author = "any", string access = "any", string tags = "any", int minumumMatchingTags = 4)
         {
             var builder = Builders<BsonDocument>.Filter;
             var authorFilter = author == "any" ? builder.Empty : builder.Eq("author", author);
@@ -96,6 +96,23 @@ namespace Gallery_Flare.Controllers
             var document = await collection.Find(new BsonDocument()).FirstOrDefaultAsync();
             IrrelevantTagsModel tags = BsonSerializer.Deserialize<IrrelevantTagsModel>(document);
             return tags.words;
+        }
+
+        public async Task PostUser(string username, string password)
+        {
+            IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(collectionName);
+            var command = new BsonDocument { { "username", username }, { "password", password } };
+            await collection.InsertOneAsync(command);
+        }
+
+        public async Task<UserModel> GetUser(string username)
+        {
+            var builder = Builders<BsonDocument>.Filter;
+            var usernameFilter = builder.Eq("username", username);
+
+            IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(collectionName);
+            var document = await collection.Find(usernameFilter).FirstOrDefaultAsync();
+            return document != null ? BsonSerializer.Deserialize<UserModel>(document) : null;
         }
     }
 }
