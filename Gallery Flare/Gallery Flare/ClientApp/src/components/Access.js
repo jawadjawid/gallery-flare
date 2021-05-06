@@ -58,6 +58,7 @@ const Access = (props) => {
                     bgColor='#f1f1f1'
                     spinnerColor='#9ee5f8'
                     textColor='#676767'
+                    children= ''
                 >
                 </LoadingScreen>
             </Dialog>

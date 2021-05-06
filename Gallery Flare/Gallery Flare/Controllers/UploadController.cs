@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Gallery_Flare.Controllers.Operations;
+using Gallery_Flare.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.WindowsAzure.Storage;
@@ -21,6 +22,9 @@ namespace Gallery_Flare.Controllers
         {
             try
             {
+                UserService userService = new UserService();
+                UserModel user = await userService.GetCurrentUserAsync(Request.Cookies["jwt"]);
+
                 AzureStoarge azureStoarge = new AzureStoarge();
                 string blobUrl = await azureStoarge.UploadAsync(file.OpenReadStream(), file.FileName);
          
@@ -28,7 +32,7 @@ namespace Gallery_Flare.Controllers
                 string tags = await search.MostCommonTags(20);
 
                 Database database = new Database("images");
-                await database.PostImageToDbAsync(file.FileName, blobUrl, "jawadjawid", access, tags);
+                await database.PostImageToDbAsync(file.FileName, blobUrl, user.username, access, tags);
 
                 return Ok("uploaded");
             }

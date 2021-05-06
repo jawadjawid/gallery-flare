@@ -10,14 +10,7 @@ namespace Gallery_Flare.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-
         Database database = new Database("user");
-
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         [HttpPost("SignUp")]
         public async Task<ActionResult> SignUpAsync([FromBody] UserModel user)
@@ -44,16 +37,46 @@ namespace Gallery_Flare.Controllers
             try
             {
                 UserModel userResult = await database.GetUser(user.username);
-                if (userResult == null)
+                if (userResult == null || !BCrypt.Net.BCrypt.Verify(user.password, userResult.password))
                     throw new Exception();
-                if(!BCrypt.Net.BCrypt.Verify(user.password, userResult.password))
-                    throw new Exception();
+                JWTService jWTService = new JWTService();
+                Response.Cookies.Append("jwt", jWTService.Generate(userResult.username), new Microsoft.AspNetCore.Http.CookieOptions { HttpOnly = true });
 
+                return Ok(userResult.username);
+            }
+            catch
+            {
+                return BadRequest("Invalid");
+            }
+        }
+
+        [HttpGet("Logout")]
+        public IActionResult Logout()
+        {
+            try
+            {
+                Response.Cookies.Delete("jwt");
                 return Ok();
             }
             catch
             {
                 return BadRequest("Invalid");
+
+            }
+        }
+
+        [HttpGet("User")]
+        public async Task<IActionResult> GetUserNameAsync()
+        {
+            try
+            {
+                UserService userService = new UserService();
+                UserModel user = await userService.GetCurrentUserAsync(Request.Cookies["jwt"]);
+                return Ok(user.username);
+            }
+            catch
+            {
+                return Unauthorized();
             }
         }
     }

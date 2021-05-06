@@ -106,6 +106,7 @@ export default function SignUp(props) {
                 throw new Error('Something went wrong');
             }
         }).catch(() => {
+            setFailMsg("Fail. Please Try again!");
             setNotificationFailOpen(true)
         }) 
     }

@@ -15,20 +15,34 @@ namespace Gallery_Flare.Controllers
     [Route("[controller]")]
     public class GalleryController : ControllerBase
     {
-        [HttpGet]
-        public async Task<string> GetAsync()
+        [HttpGet("{access}")]
+        public async Task<string> GetAsync(string access)
         {
             IList<ImageModel> results = new List<ImageModel>();
             try
             {
+                if (!(access == "public" || access == "personal"))
+                    throw new Exception();
+
                 Database database = new Database("images");
-                results = await database.GetImagesFromDbAsync(access: "public");
+
+                if (access == "personal")
+                {
+                    UserService userService = new UserService();
+                    UserModel user = await userService.GetCurrentUserAsync(Request.Cookies["jwt"]);
+                    results = await database.GetImagesFromDbAsync(author: user.username);
+                }
+                else
+                {
+                    results = await database.GetImagesFromDbAsync(access: "public");
+
+                }
                 return JsonConvert.SerializeObject(results);
             }
             catch (Exception)
             {
                 return JsonConvert.SerializeObject(results);
             }
-        }
+        }     
     }
 }

@@ -12,6 +12,8 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 function Copyright() {
     return (
@@ -57,10 +59,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SignInSide() {
+export default function SignInSide(props) {
     const classes = useStyles();
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [notificationSuccessOpen, setNotificationSuccessOpen] = React.useState(false);
+    const [notificationFailOpen, setNotificationFailOpen] = React.useState(false);
+    const [failMsg, setFailMsg] = React.useState("Invalid Credentials");
+    const [loggedInUserName, setLoggedInUserName] = React.useState("");
 
     const handleUserNameChange = (event) => {
 
@@ -72,9 +78,19 @@ export default function SignInSide() {
 
     }
 
-    const submit = (e) => {
+    const handleNotifacationSuccessClose = () => {
+        setNotificationSuccessOpen(false)
+    }
+
+    const handleNotifacationFailClose = () => {
+        setNotificationFailOpen(false)
+    }
+
+    const submit = async (e) => {
         e.preventDefault();
         if (String(username) == "" || String(password) == "") {
+            setNotificationFailOpen(true)
+            setFailMsg("User Name and Password are mandatory!");
             return;
         }
 
@@ -88,16 +104,39 @@ export default function SignInSide() {
             'dataType': 'json',
         }).then((response) => {
             if (response.ok) {
+                setNotificationSuccessOpen(true)
+                setLoggedInUserName("Welcome");
+                response.json().then(msg => {
+                    setNotificationSuccessOpen(true)
+                    setLoggedInUserName(msg);
+
+                }).then(() => { props.history.push({ pathname: '/gallery' });});
+
             } else {
                 throw new Error('Something went wrong');
             }
         }).catch(() => {
+            setFailMsg("Invalid Credentials");
 
+            setNotificationFailOpen(true)
         })
     }
 
     return (
         <Grid container component="main" className={classes.root}>
+
+            <Snackbar open={notificationSuccessOpen} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={handleNotifacationSuccessClose}>
+                <MuiAlert elevation={6} variant="filled" onClose={handleNotifacationSuccessClose} severity="success">
+                    Welcome { loggedInUserName }!
+                    </MuiAlert>
+            </Snackbar>
+
+            <Snackbar open={notificationFailOpen} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={handleNotifacationFailClose}>
+                <MuiAlert elevation={6} variant="filled" onClose={handleNotifacationFailClose} severity="error">
+                    {failMsg}
+                </MuiAlert>
+            </Snackbar>
+
             <CssBaseline />
             <Grid item xs={false} sm={4} md={7} className={classes.image} />
             <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>

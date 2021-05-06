@@ -68,7 +68,7 @@ class SearchByImageModal extends Component {
                 if (response.ok) {
                     numSuccess++;
                     response.json().then(json => {
-                        this.props.history.push({ pathname: '/gallery', state: { startedLoading: true, data: json, hasLoaded: true } });
+                        this.props.history.push({ pathname: '/public', state: { startedLoading: true, data: json, hasLoaded: true } });
                     });
                     this.setState({
                         loading: false,

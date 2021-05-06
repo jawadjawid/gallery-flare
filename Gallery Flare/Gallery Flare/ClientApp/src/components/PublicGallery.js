@@ -24,38 +24,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Gallery = (props) => {
+const PublicGallery = (props) => {
     const [forecasts, setForecasts] = React.useState([]);
     const [hasLoaded, setHasLoaded] = React.useState(false);
     const [startedLoading, setstartedLoading] = React.useState(false);
-    const [loggedUser, setLoggedUser] = React.useState("UserName");
 
     const classes = useStyles();
 
     const populateGallery = async () => {
         setstartedLoading(true);
-        const images = await fetch('Gallery/personal');
-        const data = await images.json();
+        const response = await fetch('Gallery/public');
+        const data = await response.json();
         setForecasts(data);
-        await fetch('Authentication/User', {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }}).then((response) => {
-            if (response.ok) {
-                response.json().then(msg => {
-                    setLoggedUser(msg);
-                    console.log(loggedUser);
-                });
-            } else { 
-                throw new Error('Something went wrong');
-            }
-        }).catch(() => {
-        }) ;
         setHasLoaded(true);
     }
 
-    if (!startedLoading && props.location.state == undefined ) {
+    if (!startedLoading && props.location.state == undefined) {
         populateGallery();
     }
 
@@ -101,7 +85,8 @@ const Gallery = (props) => {
 
     return (
         <div >
-            <h4>{loggedUser}'s Gallery</h4>
+            <h4>Public Gallery</h4>
+
             <GridList cellHeight={180} >
                 <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
                 </GridListTile>
@@ -111,4 +96,4 @@ const Gallery = (props) => {
     );
 }
 
-export default Gallery;
+export default PublicGallery;

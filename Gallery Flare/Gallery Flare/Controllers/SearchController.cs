@@ -43,7 +43,7 @@ namespace Gallery_Flare.Controllers
                 string tags = await search.MostCommonTags(20);
 
                 Database database = new Database("images");
-                await database.PostImageToDbAsync(file.FileName, blobUrl, "jawadjawid", access, tags);
+                //await database.PostImageToDbAsync(file.FileName, blobUrl, "jawadjawid", access, tags);
 
                 results = await database.GetImagesFromDbAsync(access: "public", tags: tags);
 
