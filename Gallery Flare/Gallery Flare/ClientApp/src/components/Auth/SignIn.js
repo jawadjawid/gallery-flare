@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import { useLocation } from "react-router-dom";
 
 function Copyright() {
     return (
@@ -86,8 +87,19 @@ export default function SignInSide(props) {
         setNotificationFailOpen(false)
     }
 
+    const handleNav = () => {
+       // let location = useLocation();
+        //console.log(location.navBarLoggedIn);
+
+        //props.history.push({ pathname: '/gallery' });
+       // window.location.reload();
+        window.location.href = "/gallery"
+
+    }
+
     const submit = async (e) => {
         e.preventDefault();
+
         if (String(username) == "" || String(password) == "") {
             setNotificationFailOpen(true)
             setFailMsg("User Name and Password are mandatory!");
@@ -104,27 +116,30 @@ export default function SignInSide(props) {
             'dataType': 'json',
         }).then((response) => {
             if (response.ok) {
-                setNotificationSuccessOpen(true)
-                setLoggedInUserName("Welcome");
+                //setNotificationSuccessOpen(true)
+                //setLoggedInUserName("Welcome");
+                //handleNav();
                 response.json().then(msg => {
                     setNotificationSuccessOpen(true)
                     setLoggedInUserName(msg);
 
-                }).then(() => { props.history.push({ pathname: '/gallery' });});
+                }).then(() => { handleNav(); });
 
             } else {
+
                 throw new Error('Something went wrong');
             }
         }).catch(() => {
-            setFailMsg("Invalid Credentials");
 
+            setFailMsg("Invalid Credentials");
             setNotificationFailOpen(true)
         })
     }
 
     return (
-        <Grid container component="main" className={classes.root}>
 
+        <Grid container component="main" className={classes.root}>
+            {props.location.navBarLoggedIn}
             <Snackbar open={notificationSuccessOpen} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={handleNotifacationSuccessClose}>
                 <MuiAlert elevation={6} variant="filled" onClose={handleNotifacationSuccessClose} severity="success">
                     Welcome { loggedInUserName }!

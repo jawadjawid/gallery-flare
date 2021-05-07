@@ -52,11 +52,11 @@ const PublicGallery = (props) => {
                 <GridListTileBar
                     title={tile.title}
                     subtitle={<span>by: {tile.author}</span>}
-                    actionIcon={
-                        <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
-                            <InfoIcon />
-                        </IconButton>
-                    }
+                    //actionIcon={
+                    //    <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
+                    //        <InfoIcon />
+                    //    </IconButton>
+                    //}
                 />
             </GridListTile>
         ));
@@ -67,11 +67,11 @@ const PublicGallery = (props) => {
                 <GridListTileBar
                     title={tile.title}
                     subtitle={<span>by: {tile.author}</span>}
-                    actionIcon={
-                        <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
-                            <InfoIcon />
-                        </IconButton>
-                    }
+                    //actionIcon={
+                    //    <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
+                    //        <InfoIcon />
+                    //    </IconButton>
+                    //}
                 />
             </GridListTile>
         ));

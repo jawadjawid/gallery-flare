@@ -15,7 +15,9 @@ export class NavMenu extends Component {
         this.toggleNavbar = this.toggleNavbar.bind(this);
         this.state = {
             collapsed: true,
-            open: false
+            open: false,
+            isLoggedIn: false,
+            isCalled: false,
         };
     }
 
@@ -25,12 +27,90 @@ export class NavMenu extends Component {
         });
     }
 
+    async refreshNav() {
+        await fetch('Authentication/User', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }).then((response) => {
+            if (response.ok) {
+                this.setState({
+                    isLoggedIn: true,
+                    //isCalled: false
+                });
+            } else {
+                throw new Error('Something went wrong');
+            }
+        }).catch(() => {
+            this.setState({
+                isLoggedIn: false,
+                //isCalled: false
+            });
+        });
+    }
+
+    componentDidMount() {
+        if (!this.state.isCalled) {
+            this.refreshNav();
+            this.setState({
+                isCalled: true
+            });
+        }
+        //setInterval(() => this.setState({ isCalled: false }), 10000)
+    }
+
     render() {
+        let nav;
+        if (this.state.isLoggedIn) {
+            nav =
+                <React.Fragment><NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+                </NavItem>
+
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/gallery">My Gallery</NavLink>
+                </NavItem>
+
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/public">Public Gallery</NavLink>
+                </NavItem>
+                <div className="uploadButton">
+                    <DropZone />
+                </div>
+                <div className="uploadButton">
+                    <SearchByImageModal />
+                </div>
+                <NavItem>
+                    <Logout />
+                </NavItem></React.Fragment>;
+        } else {
+            nav = <React.Fragment><NavItem>
+                <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+            </NavItem>
+
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/login">Log In</NavLink>
+                </NavItem>
+
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/signup">Sign Up</NavLink>
+                </NavItem>
+
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/public">Public Gallery</NavLink>
+                </NavItem>
+
+                <div className="uploadButton">
+                    <SearchByImageModal />
+                </div>
+            </React.Fragment>;
+        }
+
         return (
             <header>
                 <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
                     <Container>
-                       
                         <NavbarBrand to="/">
                             <img
                                 alt=""
@@ -44,34 +124,7 @@ export class NavMenu extends Component {
                         <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                         <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
                             <ul className="navbar-nav flex-grow">
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                                </NavItem>
-                     
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/gallery">My Gallery</NavLink>
-                                </NavItem>
-
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/login">Log In</NavLink>
-                                </NavItem>
-
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/signup">Sign Up</NavLink>
-                                </NavItem>
-
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/public">Public Gallery</NavLink>
-                                </NavItem>
-                                <div className="uploadButton">
-                                    <DropZone/>
-                                </div> 
-                                <div className="uploadButton">
-                                    <SearchByImageModal />
-                                </div> 
-                                <NavItem>
-                                    <Logout />
-                                </NavItem>
+                                {nav}
                             </ul>
                         </Collapse>
                     </Container>

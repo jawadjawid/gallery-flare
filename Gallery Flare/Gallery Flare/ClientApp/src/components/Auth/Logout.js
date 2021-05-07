@@ -1,18 +1,15 @@
 ﻿import React from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
-
+import { BrowserRouter, Link, Route } from 'react-router-dom';
 
 const Logout = (props) => {
 
-    const handleLogOut = async (props) => {
+    const handleLogOut = async (context) => {
         await fetch('Authentication/Logout').then((response) => {
             if (response.ok) {
-                console.log("3");
-                console.log(props.history);
-                //props.history.push({ pathname: '/' });
-                console.log("3");
-
+                //props.history.push('/');
+                window.location.href = "/"
             } else {
                 throw new Error('Something went wrong');
             }
@@ -21,11 +18,13 @@ const Logout = (props) => {
     }
 
     return (
-        <div>
-            <NavLink className="btn btn-primary btn-sm" color="primary" onClick={handleLogOut}>
-                Logout
-            </NavLink>
-        </div>
+        <BrowserRouter>
+            <div>
+                <NavLink tag={Link} className="text-dark" color="primary" onClick={handleLogOut}>
+                    Logout
+                </NavLink>
+            </div>
+        </BrowserRouter>
     );
 }
 
