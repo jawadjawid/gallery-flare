@@ -60,14 +60,14 @@ export default class DropZone extends Component {
             }).then((response) => {
                 if (response.ok) {
                     numSuccess++;
-          
+
                 } else {
                     throw new Error('Something went wrong');
                 }
             }).catch(() => {
-                failedFilesArray.push(files[i].name);                
+                failedFilesArray.push(files[i].name);
                 failedFiles += failedFilesArray.join(", ");
-            }) 
+            })
         }
 
         this.setState({
@@ -108,7 +108,7 @@ export default class DropZone extends Component {
 
     handleNotifacationSuccessClose() {
         this.setState({
-            notificationSuccessOpen: false 
+            notificationSuccessOpen: false
         });
     }
 

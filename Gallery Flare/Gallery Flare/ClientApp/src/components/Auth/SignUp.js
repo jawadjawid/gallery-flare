@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp(props) {
     const classes = useStyles();
- 
+
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [notificationSuccessOpen, setNotificationSuccessOpen] = React.useState(false);
@@ -85,15 +85,15 @@ export default function SignUp(props) {
         }
 
         fetch('Authentication/SignUp', {
-             method: 'POST',
-             headers: {
-                 'Accept': 'application/json',
-                 'Content-Type': 'application/json'
-             },
-             body: JSON.stringify({ username: String(username), password: String(password) }),
-             'dataType': 'json',
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: String(username), password: String(password) }),
+            'dataType': 'json',
         }).then((response) => {
-            if (response.ok) {           
+            if (response.ok) {
                 //props.history.push({ pathname: '/login' });
                 setNotificationSuccessOpen(true)
 
@@ -108,12 +108,12 @@ export default function SignUp(props) {
         }).catch(() => {
             setFailMsg("Fail. Please Try again!");
             setNotificationFailOpen(true)
-        }) 
+        })
     }
 
     return (
         //<div>
-      
+
         //</div>
 
         <Container component="main" maxWidth="xs">
@@ -126,7 +126,7 @@ export default function SignUp(props) {
             <Snackbar open={notificationFailOpen} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={handleNotifacationFailClose}>
                 <MuiAlert elevation={6} variant="filled" onClose={handleNotifacationFailClose} severity="error">
                     {failMsg}
-            </MuiAlert>
+                </MuiAlert>
             </Snackbar>
 
             <CssBaseline />

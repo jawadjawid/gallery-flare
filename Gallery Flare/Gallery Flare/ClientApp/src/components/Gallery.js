@@ -9,7 +9,7 @@ import InfoIcon from '@material-ui/icons/Delete';
 import { common } from '@material-ui/core/colors';
 import ModalImage from "react-modal-image";
 import '../custom.css';
- 
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,13 +45,14 @@ const Gallery = (props) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
-            }}).then((response) => {
+            }
+        }).then((response) => {
             if (response.ok) {
                 response.json().then(msg => {
                     setLoggedUser(msg);
                     console.log(loggedUser);
                 });
-            } else { 
+            } else {
                 throw new Error('Something went wrong');
             }
         }).catch(() => {
@@ -65,7 +66,7 @@ const Gallery = (props) => {
     }
 
 
-    if (!startedLoading && props.location.state == undefined ) {
+    if (!startedLoading && props.location.state == undefined) {
         populateGallery();
     }
 
@@ -76,7 +77,7 @@ const Gallery = (props) => {
         console.log(showTile);
 
         if (showTile[tile.title]) {
-     
+
             return (<GridListTileBar
                 title={tile.title}
                 subtitle={<span>by: {tile.author}</span>}
@@ -112,7 +113,7 @@ const Gallery = (props) => {
                         </IconButton>
                     }
                 />
-             </GridListTile>
+            </GridListTile>
         ));
     } else if (props.location.state != undefined && props.location.state.data.length != 0) {
         data = props.location.state.data.map((tile) => (

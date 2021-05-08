@@ -10,8 +10,9 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import LoadingScreen from 'react-loading-screen';
+import { NavLink } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
-import { FormControlLabel } from '@material-ui/core';
 import '../../custom.css';
 
 
@@ -22,10 +23,12 @@ const InitialSearchModal = (props) => {
     }
 
     return (
-        <div>   
-            <Button color="primary" variant="contained" onClick={props.handleAccessOpen}>
+        <div>
+
+
+            <NavLink tag={Link} className="text-white" color="primary" onClick={props.handleAccessOpen}>
                 Search
-            </Button>
+            </NavLink>
 
             <Dialog
 
@@ -63,7 +66,7 @@ const InitialSearchModal = (props) => {
                         children=''
                     >
                     </LoadingScreen>
-        
+
                 </DialogActions>
             </Dialog>
         </div>

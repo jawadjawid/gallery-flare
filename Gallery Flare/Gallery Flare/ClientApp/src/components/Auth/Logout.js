@@ -20,7 +20,7 @@ const Logout = (props) => {
     return (
         <BrowserRouter>
             <div>
-                <NavLink tag={Link} className="text-dark" color="primary" onClick={handleLogOut}>
+                <NavLink tag={Link} className="text-white" color="primary" onClick={handleLogOut}>
                     Logout
                 </NavLink>
             </div>

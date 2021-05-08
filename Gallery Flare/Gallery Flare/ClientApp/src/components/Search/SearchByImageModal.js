@@ -20,7 +20,7 @@ class SearchByImageModal extends Component {
         this.handleNotifacationSuccessClose = this.handleNotifacationSuccessClose.bind(this)
         this.handleNotifacationFailClose = this.handleNotifacationFailClose.bind(this)
         this.searchByText = this.searchByText.bind(this)
-      
+
         this.state = {
             open: false,
             files: [],
@@ -117,12 +117,12 @@ class SearchByImageModal extends Component {
     async searchByText() {
         //let { history } = this.props
 
-         const response = await fetch('Search/' + this.state.searchQuery);
-         const data = await response.json();
-         this.setState({
-             data: data,
-             accessOpen: false,
-         });
+        const response = await fetch('Search/' + this.state.searchQuery);
+        const data = await response.json();
+        this.setState({
+            data: data,
+            accessOpen: false,
+        });
         this.props.history.push({ pathname: '/public', state: { startedLoading: true, data: this.state.data, hasLoaded: true } });
     }
 
@@ -154,7 +154,7 @@ class SearchByImageModal extends Component {
                     </MuiAlert>
                 </Snackbar>
 
-                <InitialSearchModal loading={this.state.loading } searchByImage={this.searchByImage} isOpen={this.state.accessOpen} handleAccessOpen={this.handleAccessOpen} setAccessValue={this.setAccessValue} searchQuery={this.searchQuery} searchByText={this.searchByText}/>
+                <InitialSearchModal loading={this.state.loading} searchByImage={this.searchByImage} isOpen={this.state.accessOpen} handleAccessOpen={this.handleAccessOpen} setAccessValue={this.setAccessValue} searchQuery={this.searchQuery} searchByText={this.searchByText} />
 
                 <DropzoneDialog
                     open={this.state.open}

@@ -88,11 +88,11 @@ export default function SignInSide(props) {
     }
 
     const handleNav = () => {
-       // let location = useLocation();
+        // let location = useLocation();
         //console.log(location.navBarLoggedIn);
 
         //props.history.push({ pathname: '/gallery' });
-       // window.location.reload();
+        // window.location.reload();
         window.location.href = "/gallery"
 
     }
@@ -142,7 +142,7 @@ export default function SignInSide(props) {
             {props.location.navBarLoggedIn}
             <Snackbar open={notificationSuccessOpen} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={handleNotifacationSuccessClose}>
                 <MuiAlert elevation={6} variant="filled" onClose={handleNotifacationSuccessClose} severity="success">
-                    Welcome { loggedInUserName }!
+                    Welcome {loggedInUserName}!
                     </MuiAlert>
             </Snackbar>
 
@@ -167,7 +167,7 @@ export default function SignInSide(props) {
                             variant="outlined"
                             margin="normal"
                             required
-                            fullWidth                          
+                            fullWidth
                             onChange={handleUserNameChange}
                             id="username"
                             label="User Name"
@@ -198,9 +198,9 @@ export default function SignInSide(props) {
 
                         >
                             Sign In
-            </Button>
+                        </Button>
                         <Grid container>
- 
+
                             <Grid item>
                                 <Link href="/signup" variant="body2">
                                     {"Don't have an account? Sign Up"}

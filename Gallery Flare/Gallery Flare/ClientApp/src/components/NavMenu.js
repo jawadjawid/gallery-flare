@@ -69,7 +69,7 @@ export class NavMenu extends Component {
         let history = useHistory();
         history.push(path);
         //this.props.history.push('/');
-    }    
+    }
 
 
     render() {
@@ -78,30 +78,27 @@ export class NavMenu extends Component {
             nav =
                 <React.Fragment>
                     <NavItem>
-                        <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+                        <NavLink tag={Link} className="text-white" to="/">Home</NavLink>
                     </NavItem>
 
-                {/*  <div className="uploadButton">
+                    {/*  <div className="uploadButton">
                     <Button color="primary" variant="contained" onClick={this.routeChange}>
                             Home
                         </Button>
                     </div> */}
-                   
+
 
                     <NavItem>
-                        <NavLink tag={Link} className="text-dark" to="/gallery">My Gallery</NavLink>
+                        <NavLink tag={Link} className="text-white" to="/gallery">My Gallery</NavLink>
                     </NavItem>
 
                     <NavItem>
-                        <NavLink tag={Link} className="text-dark" to="/public">Public Gallery</NavLink>
+                        <NavLink tag={Link} className="text-white" to="/public">Public Gallery</NavLink>
                     </NavItem>
+                    <DropZone />
 
-                    <div className="uploadButton">
-                        <DropZone />
-                    </div>
-                    <div className="uploadButton">
-                        <SearchByImageModal />
-                    </div>
+                    <SearchByImageModal />
+
                     <NavItem>
                         <Logout />
                     </NavItem>
@@ -109,24 +106,23 @@ export class NavMenu extends Component {
         } else {
             nav = <React.Fragment>
                 <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+                    <NavLink tag={Link} className="text-white" to="/">Home</NavLink>
                 </NavItem>
 
                 <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/login">Log In</NavLink>
+                    <NavLink tag={Link} className="text-white" to="/login">Log In</NavLink>
                 </NavItem>
 
                 <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/signup">Sign Up</NavLink>
+                    <NavLink tag={Link} className="text-white" to="/signup">Sign Up</NavLink>
                 </NavItem>
 
                 <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/public">Public Gallery</NavLink>
+                    <NavLink tag={Link} className="text-white" to="/public">Public Gallery</NavLink>
                 </NavItem>
 
-                <div className="uploadButton">
-                    <SearchByImageModal />
-                </div>
+                <SearchByImageModal />
+
             </React.Fragment>;
         }
 
@@ -143,7 +139,7 @@ export class NavMenu extends Component {
                                 height="30"
                                 className="d-inline-block align-top"
                             />{' '}
-                            Flare
+                            <span className="text-white">Flare</span>
                         </NavbarBrand>
                         <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                         <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
