@@ -14,6 +14,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import { withRouter } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 function Copyright() {
     return (
@@ -48,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SignUp(props) {
+ function SignUp(props) {
     const classes = useStyles();
 
     const [username, setUsername] = React.useState("");
@@ -74,9 +76,17 @@ export default function SignUp(props) {
 
     const handleNotifacationFailClose = () => {
         setNotificationFailOpen(false)
-    }
+     }
 
-    const submit = (e) => {
+     const goToSignIn = () => {
+         if (notificationSuccessOpen)
+             window.location.href = "/login";
+            /*props.history.push({ pathname: '/login' })*/
+     }
+
+     React.useEffect(goToSignIn, [notificationSuccessOpen]);
+
+    const submit =  (e) => {
         e.preventDefault();
         if (String(username) == "" || String(password) == "") {
             setNotificationFailOpen(true)
@@ -92,11 +102,11 @@ export default function SignUp(props) {
             },
             body: JSON.stringify({ username: String(username), password: String(password) }),
             'dataType': 'json',
-        }).then((response) => {
+        }).then(async (response) => {
             if (response.ok) {
-                //props.history.push({ pathname: '/login' });
-                setNotificationSuccessOpen(true)
-
+                
+                await setNotificationSuccessOpen(true);  
+               
             } else {
                 response.json().then(msg => {
                     if (msg == "User name is already taken!") {
@@ -191,3 +201,5 @@ export default function SignUp(props) {
         </Container>
     );
 }
+
+export default withRouter(SignUp);

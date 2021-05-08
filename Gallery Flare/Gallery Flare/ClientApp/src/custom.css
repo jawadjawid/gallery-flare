@@ -22,14 +22,33 @@ code {
 .photo {
     height: 100px;
     width: 100px;
+    margin: 20px;
 }
 
 .contain {
     text-align: center;
+    border-radius: 30px;
+    margin-right: 5px;
 }
 
-.imgs {
+.contain2 {
+    text-align: center;
+    border-radius: 30px;
+    margin-right: 5px;
+}
 
+.contact {
+    text-align: center;
+    border-radius: 30px;
+    margin-right: 5px;
+}
+
+    .contact:hover {
+        cursor: pointer;
+        background-color: #4cc194;
+    }
+
+.imgs {
     width: 100%;
     height: 400px;
     transform: translateY(-0%);
