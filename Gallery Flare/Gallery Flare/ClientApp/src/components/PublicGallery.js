@@ -7,6 +7,8 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Delete';
 import { common } from '@material-ui/core/colors';
+import ModalImage from "react-modal-image";
+import '../custom.css';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,10 +49,14 @@ const PublicGallery = (props) => {
 
     if (forecasts.length != 0 && props.location.state == undefined) {
         data = forecasts.map((tile) => (
-            <GridListTile key={tile.img}>
-                <img src={tile.img} alt={tile.title} />
+            <GridListTile key={tile.img} rows={2}>
+                <ModalImage className="imgs"
+                    small={tile.img}
+                    large={tile.img}
+                    alt={tile.tags}
+                />
                 <GridListTileBar
-                    title={tile.title}
+                    title={tile.tags.split(",")[0]}
                     subtitle={<span>by: {tile.author}</span>}
                     //actionIcon={
                     //    <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
@@ -62,10 +68,14 @@ const PublicGallery = (props) => {
         ));
     } else if (props.location.state != undefined && props.location.state.data.length != 0) {
         data = props.location.state.data.map((tile) => (
-            <GridListTile key={tile.img}>
-                <img src={tile.img} alt={tile.title} />
+            <GridListTile key={tile.img} rows={2}>
+                <ModalImage className="imgs"
+                    small={tile.img}
+                    large={tile.img}
+                    alt={tile.tags}
+                />
                 <GridListTileBar
-                    title={tile.title}
+                    title={tile.tags.split(",")[0]}
                     subtitle={<span>by: {tile.author}</span>}
                     //actionIcon={
                     //    <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>

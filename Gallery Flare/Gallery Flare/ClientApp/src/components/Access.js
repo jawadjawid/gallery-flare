@@ -1,12 +1,12 @@
 ﻿import React from 'react';
-//import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
-import { Form, Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
+//import { Form, Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
 import { RadioGroup } from '@material-ui/core';
 import { Radio } from '@material-ui/core';
 import LoadingScreen from 'react-loading-screen';
@@ -24,7 +24,7 @@ const Access = (props) => {
 
     return (
         <div>
-            <Button className="btn btn-primary btn-sm" color="primary" onClick={props.handleAccessOpen}>
+            <Button variant="contained" color="primary" onClick={props.handleAccessOpen}>
                 Upload
             </Button>
             <Dialog
@@ -46,10 +46,10 @@ const Access = (props) => {
            
                 </DialogContent>
                 <DialogActions>
-                    <Button className="btn btn-light btn-sm" onClick={ props.handleAccessOpen}>
+                    <Button variant="contained" onClick={ props.handleAccessOpen}>
                         Cancel
                 </Button>
-                    <Button className="btn btn-primary btn-sm" onClick={props.accessDone} color="primary">
+                    <Button variant="contained" onClick={props.accessDone} color="primary">
                         Next
                  </Button>
                 </DialogActions>

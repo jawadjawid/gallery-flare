@@ -5,6 +5,9 @@ import './NavMenu.css';
 import DropZone from './DropZone';
 import SearchByImageModal from './Search/SearchByImageModal';
 import Logout from './Auth/Logout';
+import Button from '@material-ui/core/Button';
+import { withRouter } from 'react-router-dom';
+import { BrowserRouter, Route, useHistory } from 'react-router-dom';
 
 export class NavMenu extends Component {
     static displayName = NavMenu.name;
@@ -60,34 +63,54 @@ export class NavMenu extends Component {
         //setInterval(() => this.setState({ isCalled: false }), 10000)
     }
 
+
+    routeChange(context) {
+        let path = '/';
+        let history = useHistory();
+        history.push(path);
+        //this.props.history.push('/');
+    }    
+
+
     render() {
         let nav;
         if (this.state.isLoggedIn) {
             nav =
-                <React.Fragment><NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                </NavItem>
+                <React.Fragment>
+                    <NavItem>
+                        <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+                    </NavItem>
 
-                <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/gallery">My Gallery</NavLink>
-                </NavItem>
+                {/*  <div className="uploadButton">
+                    <Button color="primary" variant="contained" onClick={this.routeChange}>
+                            Home
+                        </Button>
+                    </div> */}
+                   
 
-                <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/public">Public Gallery</NavLink>
-                </NavItem>
-                <div className="uploadButton">
-                    <DropZone />
-                </div>
-                <div className="uploadButton">
-                    <SearchByImageModal />
-                </div>
-                <NavItem>
-                    <Logout />
-                </NavItem></React.Fragment>;
+                    <NavItem>
+                        <NavLink tag={Link} className="text-dark" to="/gallery">My Gallery</NavLink>
+                    </NavItem>
+
+                    <NavItem>
+                        <NavLink tag={Link} className="text-dark" to="/public">Public Gallery</NavLink>
+                    </NavItem>
+
+                    <div className="uploadButton">
+                        <DropZone />
+                    </div>
+                    <div className="uploadButton">
+                        <SearchByImageModal />
+                    </div>
+                    <NavItem>
+                        <Logout />
+                    </NavItem>
+                </React.Fragment>;
         } else {
-            nav = <React.Fragment><NavItem>
+            nav = <React.Fragment>
+                <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-            </NavItem>
+                </NavItem>
 
                 <NavItem>
                     <NavLink tag={Link} className="text-dark" to="/login">Log In</NavLink>
@@ -114,12 +137,13 @@ export class NavMenu extends Component {
                         <NavbarBrand to="/">
                             <img
                                 alt=""
-                                src="../../../logo.svg"
+                                //src="./logo.svg"
+                                src={require('./logo.svg')}
                                 width="30"
                                 height="30"
                                 className="d-inline-block align-top"
                             />{' '}
-                          Gallery Flare
+                            Flare
                         </NavbarBrand>
                         <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                         <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
@@ -133,3 +157,4 @@ export class NavMenu extends Component {
         );
     }
 }
+export default withRouter(NavMenu);

@@ -7,6 +7,9 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Delete';
 import { common } from '@material-ui/core/colors';
+import ModalImage from "react-modal-image";
+import '../custom.css';
+ 
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,6 +32,7 @@ const Gallery = (props) => {
     const [hasLoaded, setHasLoaded] = React.useState(false);
     const [startedLoading, setstartedLoading] = React.useState(false);
     const [loggedUser, setLoggedUser] = React.useState("UserName");
+    const [showTile, setShowTile] = React.useState("UserName");
 
     const classes = useStyles();
 
@@ -51,22 +55,56 @@ const Gallery = (props) => {
                 throw new Error('Something went wrong');
             }
         }).catch(() => {
-        }) ;
+        });
+
+        let showIt = {};
+        forecasts.map(tile => this.showIt[tile.title] = false);
+        await setShowTile(showIt);
+
         setHasLoaded(true);
     }
+
 
     if (!startedLoading && props.location.state == undefined ) {
         populateGallery();
     }
 
     let data;
+    const doWork = (tile) => {
+        console.log("3");
+        console.log(tile);
+        console.log(showTile);
+
+        if (showTile[tile.title]) {
+     
+            return (<GridListTileBar
+                title={tile.title}
+                subtitle={<span>by: {tile.author}</span>}
+                className="state"
+                actionIcon={
+                    <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
+                        <InfoIcon />
+                    </IconButton>
+                }
+            />)
+        }
+    }
 
     if (forecasts.length != 0 && props.location.state == undefined) {
         data = forecasts.map((tile) => (
-            <GridListTile key={tile.img}>
-                <img src={tile.img} alt={tile.title} />
+            <GridListTile key={tile.img} rows={2}>
+                {/*
+                //<div onMouseOver={() => { let gang = tile.title; let newShow = { ...showTile }; newShow[gang] = true; setShowTile(newShow) }}
+                //    onMouseOut={() => { let gang = tile.title; let newShow = { ...showTile }; newShow[gang] = false; setShowTile(newShow) }}>*/}
+
+                <ModalImage className="imgs"
+                    small={tile.img}
+                    large={tile.img}
+                    alt={tile.tags}
+                />
+
                 <GridListTileBar
-                    title={tile.title}
+                    title={tile.tags.split(",")[0]}
                     subtitle={<span>by: {tile.author}</span>}
                     actionIcon={
                         <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
@@ -74,14 +112,18 @@ const Gallery = (props) => {
                         </IconButton>
                     }
                 />
-            </GridListTile>
+             </GridListTile>
         ));
     } else if (props.location.state != undefined && props.location.state.data.length != 0) {
         data = props.location.state.data.map((tile) => (
-            <GridListTile key={tile.img}>
-                <img src={tile.img} alt={tile.title} />
+            <GridListTile key={tile.img} rows={2}>
+                <ModalImage className="imgs"
+                    small={tile.img}
+                    large={tile.img}
+                    alt={tile.tags}
+                />
                 <GridListTileBar
-                    title={tile.title}
+                    title={tile.tags.split(",")[0]}
                     subtitle={<span>by: {tile.author}</span>}
                     actionIcon={
                         <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>

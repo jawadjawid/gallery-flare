@@ -22,7 +22,7 @@ namespace Gallery_Flare.Controllers.Operations
 
         public async Task<string> UploadAsync(Stream file, string name)
         {
-            CloudBlockBlob blob = container.GetBlockBlobReference($"{name}_{DateTimeOffset.Now.ToUnixTimeMilliseconds()}");
+            CloudBlockBlob blob = container.GetBlockBlobReference($"{DateTimeOffset.Now.ToUnixTimeMilliseconds()}_{name}");
             await blob.UploadFromStreamAsync(file);
             return blob.Uri.AbsoluteUri;
         }

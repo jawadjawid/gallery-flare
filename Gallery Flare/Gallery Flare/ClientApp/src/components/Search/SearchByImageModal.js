@@ -123,7 +123,7 @@ class SearchByImageModal extends Component {
              data: data,
              accessOpen: false,
          });
-        this.props.history.push({ pathname: '/gallery', state: { startedLoading: true, data: this.state.data, hasLoaded: true } });
+        this.props.history.push({ pathname: '/public', state: { startedLoading: true, data: this.state.data, hasLoaded: true } });
     }
 
     handleNotifacationSuccessClose() {
