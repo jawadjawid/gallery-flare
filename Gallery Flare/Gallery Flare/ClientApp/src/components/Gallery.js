@@ -7,6 +7,8 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Delete';
 import { common } from '@material-ui/core/colors';
+import PublicIcon from '@material-ui/icons/Public';
+import LockIcon from '@material-ui/icons/Lock';
 import ModalImage from "react-modal-image";
 import '../custom.css';
 
@@ -91,6 +93,15 @@ const Gallery = (props) => {
         }
     }
 
+
+    const accessIcons = (access) => {
+        if (access == "public") {
+            return (<PublicIcon />)
+        } else {
+            return (<LockIcon />)
+        }
+    }
+
     if (forecasts.length != 0 && props.location.state == undefined) {
         data = forecasts.map((tile) => (
             <GridListTile key={tile.img} rows={2}>
@@ -103,15 +114,15 @@ const Gallery = (props) => {
                     large={tile.img}
                     alt={tile.tags}
                 />
-
+ 
                 <GridListTileBar
                     title={tile.tags.split(",")[0]}
                     subtitle={<span>by: {tile.author}</span>}
                     actionIcon={
                         <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
-                            <InfoIcon />
+                            {accessIcons(tile.access)}
                         </IconButton>
-                    }
+                    } 
                 />
             </GridListTile>
         ));
@@ -128,7 +139,7 @@ const Gallery = (props) => {
                     subtitle={<span>by: {tile.author}</span>}
                     actionIcon={
                         <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
-                            <InfoIcon />
+                            {accessIcons(tile.access)}
                         </IconButton>
                     }
                 />

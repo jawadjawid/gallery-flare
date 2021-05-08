@@ -19,65 +19,71 @@ namespace Gallery_Flare.Controllers.Operations
 
         private const string MKT_PARAMETER = "?mkt=";
 
-        private static string allNames = "";
+        private static string allResults = "";
 
         public TagImages(string url)
         {
             _imageUrl = url;
-            allNames = "";
+            allResults = "";
         }
 
-        public async Task<string> MostCommonTags(int top)
+        public async Task<string> MostCommonTags(int numOfDesiredTags)
         {
-            RunAsync().Wait();
+            //A function that returns the top numOfDesiredTags as a comma seperated string
+            ResearchImage().Wait();
             IList<string> mostCommonResults = new List<string>();
 
-            string[] arr = allNames.Split(" ");
-            Dictionary<string, int> hs =
+            Database database = new Database("words");
+            string irrelevantTags = await database.GetIrrelevantTags();
+
+            string[] allTagsArray = allResults.Split(" ");
+            Dictionary<string, int> tagsFrequencies =
            new Dictionary<string, int>();
 
-            for (int i = 0; i < arr.Length; i++)
+            for (int tag = 0; tag < allTagsArray.Length; tag++)
             {
-                if (hs.ContainsKey(arr[i]))
+                if (tagsFrequencies.ContainsKey(allTagsArray[tag]))
                 {
-                    hs[arr[i]] = hs[arr[i]] + 1;
+                    tagsFrequencies[allTagsArray[tag]] = tagsFrequencies[allTagsArray[tag]] + 1;
                 }
                 else
                 {
-                    hs.Add(arr[i], 1);
+                    tagsFrequencies.Add(allTagsArray[tag], 1);
                 }
             }
 
-            int numOfDesiredTags = 0;
+            int numOfFoundTopTags = 0;
             int iterations = 0;
 
-            while (numOfDesiredTags < top && iterations < arr.Length)
+            while (numOfFoundTopTags < numOfDesiredTags && iterations < allTagsArray.Length)
             {
-                string key = "";
-                int value = 0;
+                string tagName = "";
+                int tagFrequency = 0;
                 iterations++;
-                foreach (KeyValuePair<string, int> me in hs)
+                foreach (KeyValuePair<string, int> tag in tagsFrequencies)
                 {
-                    if (me.Value > value)
+                    if (tag.Value > tagFrequency)
                     {
-                        value = me.Value;
-                        key = me.Key;
+                        tagFrequency = tag.Value;
+                        tagName = tag.Key;
                     }
                 }
-                hs[key] = 0;
-                Database database = new Database("words");
-                string irrelevantTags = await database.GetIrrelevantTags();
-                if (!mostCommonResults.Any(s => s.Equals(key, StringComparison.OrdinalIgnoreCase)) && !irrelevantTags.ToLower().Contains(key.ToLower()))
+
+                //Reset frequencey of acknowledged key (to be ignored in next iterations)
+                tagsFrequencies[tagName] = 0;
+
+                //Ignore duplicates and allow only meaningful tags
+                if (!mostCommonResults.Any(s => s.Equals(tagName, StringComparison.OrdinalIgnoreCase)) && !irrelevantTags.ToLower().Contains(tagName.ToLower()))
                 {
-                    mostCommonResults.Add(key.ToLower());
-                    numOfDesiredTags++;
+                    mostCommonResults.Add(tagName.ToLower());
+                    numOfFoundTopTags++;
                 }
             }
-            allNames = "";
+            allResults = "";
             return string.Join(",", mostCommonResults);
         }
 
-        static async Task RunAsync()
+        static async Task ResearchImage()
         {
             try
             {
@@ -128,7 +134,7 @@ namespace Gallery_Flare.Controllers.Operations
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw e;
             }
         }
 
@@ -149,16 +155,16 @@ namespace Gallery_Flare.Controllers.Operations
 
                 if (string.IsNullOrEmpty(displayName))
                 {
-                    FillNamesForNullOrEmpty(tag);
+                    StoreInsightsForNullOrEmpty(tag);
                 }
                 else
                 {
-                    allNames += $"{displayName} ";
+                    allResults += $"{displayName} ";
                 }
             }
         }
 
-        static void FillNamesForNullOrEmpty(Newtonsoft.Json.Linq.JToken tag)
+        static void StoreInsightsForNullOrEmpty(Newtonsoft.Json.Linq.JToken tag)
         {
             var actions = tag["actions"];
             string[] actionTypes = { "PagesIncluding", "VisualSearch", "ProductVisualSearch" };
@@ -169,7 +175,7 @@ namespace Gallery_Flare.Controllers.Operations
                 {
                     foreach (Newtonsoft.Json.Linq.JToken data in action["data"]["value"])
                     {
-                        allNames += $"{(string)data["name"]} ";
+                        allResults += $"{(string)data["name"]} ";
                     }
                 }
             }
