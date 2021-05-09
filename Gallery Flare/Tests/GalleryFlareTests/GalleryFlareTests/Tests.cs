@@ -14,7 +14,7 @@ namespace GalleryFlareTests
 {
     public class Tests
     {
-        public string _baseUri = "https://localhost:44339";
+        public string _baseUri = "https://galleryflare.azurewebsites.net";
 
         private static Random random = new Random();
         public static string RandomString(int length)
