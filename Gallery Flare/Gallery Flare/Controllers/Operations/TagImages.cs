@@ -7,6 +7,7 @@ using System.Threading;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Globalization;
+using Gallery_Flare.Controllers.Operations.Database;
 
 namespace Gallery_Flare.Controllers.Operations
 {
@@ -33,7 +34,7 @@ namespace Gallery_Flare.Controllers.Operations
             ResearchImage().Wait();
             IList<string> mostCommonResults = new List<string>();
 
-            Database database = new Database("words");
+            IrrelvantTagsDatabaseConnector database = new IrrelvantTagsDatabaseConnector();
             string irrelevantTags = await database.GetIrrelevantTags();
 
             string[] allTagsArray = allResults.Split(" ");

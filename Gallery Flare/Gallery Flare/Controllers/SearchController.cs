@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Gallery_Flare.Controllers.Operations;
+using Gallery_Flare.Controllers.Operations.Database;
 using Gallery_Flare.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,47 +15,43 @@ namespace Gallery_Flare.Controllers
     [ApiController]
     public class SearchController : ControllerBase
     {
+        private readonly AzureStoarge azureStoarge;
+
+        private readonly GalleryDatabaseConnector database;
+
+        public SearchController(GalleryDatabaseConnector database, AzureStoarge azureStoarge)
+        {
+            this.database = database;
+            this.azureStoarge = azureStoarge;
+        }
+
         [HttpGet("{query}")]
         public async Task<string> SearchAsync(string query)
         {
-            IList<ImageModel> results = new List<ImageModel>();
             try
             {
-                Database database = new Database("images");
-                results = await database.GetImagesFromDbAsync(access: "public", tags: query);
-                return JsonConvert.SerializeObject(results);
+                return JsonConvert.SerializeObject(await database.GetImagesFromDbAsync(access: "public", tags: query));
             }
             catch (Exception)
             {
-                return JsonConvert.SerializeObject(results);
+                return JsonConvert.SerializeObject(new List<ImageModel>());
             }
         }
 
         [HttpPost]
-        public async Task<string> Search([FromForm] IFormFile file, [FromForm] string access = "Search")
+        public async Task<string> Search([FromForm] IFormFile file)
         {
-            IList<ImageModel> results = new List<ImageModel>();
             try
             {
-                AzureStoarge azureStoarge = new AzureStoarge();
                 string blobUrl = await azureStoarge.UploadAsync(file.OpenReadStream(), file.FileName);
+                string tags = await new TagImages(blobUrl).MostCommonTags(20);
 
-                TagImages search = new TagImages(blobUrl);
-                string tags = await search.MostCommonTags(20);
-
-                Database database = new Database("images");
-                //await database.PostImageToDbAsync(file.FileName, blobUrl, "jawadjawid", access, tags);
-
-                results = await database.GetImagesFromDbAsync(access: "public", tags: tags);
-
-                return JsonConvert.SerializeObject(results);
+                return JsonConvert.SerializeObject(await database.GetImagesFromDbAsync(access: "public", tags: tags));
             }
             catch (Exception)
             {
-                return JsonConvert.SerializeObject(results);
+                return JsonConvert.SerializeObject(new List<ImageModel>());
             }
         }
-
-
     }
 }

@@ -8,6 +8,7 @@ using MongoDB.Bson.Serialization;
 using Gallery_Flare.Models;
 using Newtonsoft.Json;
 using Gallery_Flare.Controllers.Operations;
+using Gallery_Flare.Controllers.Operations.Database;
 
 namespace Gallery_Flare.Controllers
 {
@@ -15,6 +16,16 @@ namespace Gallery_Flare.Controllers
     [Route("[controller]")]
     public class GalleryController : ControllerBase
     {
+        private readonly UserService userService;
+
+        private readonly GalleryDatabaseConnector database;
+
+        public GalleryController(GalleryDatabaseConnector database, UserService userService)
+        {
+            this.database = database;
+            this.userService = userService;
+        }
+
         [HttpGet("{access}")]
         public async Task<string> GetAsync(string access)
         {
@@ -24,11 +35,8 @@ namespace Gallery_Flare.Controllers
                 if (!(access == "public" || access == "personal"))
                     throw new Exception();
 
-                Database database = new Database("images");
-
                 if (access == "personal")
                 {
-                    UserService userService = new UserService();
                     UserModel user = await userService.GetCurrentUserAsync(Request.Cookies["jwt"]);
                     results = await database.GetImagesFromDbAsync(author: user.username);
                 }

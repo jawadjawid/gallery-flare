@@ -7,19 +7,13 @@ using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
 using Gallery_Flare.Models;
 
-namespace Gallery_Flare.Controllers.Operations
+namespace Gallery_Flare.Controllers.Operations.Database
 {
-    public class Database
+    public class GalleryDatabaseConnector : DatabaseParent
     {
-        private MongoClient client;
-        private string connectionString = "mongodb+srv://jawad:jawad@cluster0.r6ob1.azure.mongodb.net/flare?retryWrites=true&w=majority";
-        private string databaseName = "flare";
-        private IMongoDatabase database;
-        private string collectionName;
-
-        public Database(string collectionName)
+        public GalleryDatabaseConnector()
         {
-            this.collectionName = collectionName;
+            collectionName = "images";
             client = new MongoClient(connectionString);
             database = client.GetDatabase(databaseName);
         }
@@ -43,7 +37,7 @@ namespace Gallery_Flare.Controllers.Operations
             foreach (var doc in documents)
                 results.Add(BsonSerializer.Deserialize<ImageModel>(doc));
 
-            IList<ImageModel> filtieredResults = new List<ImageModel>();
+            IList<ImageModel> filtieredByTagsResults = new List<ImageModel>();
             if (tags != "any")
             {
                 string[] tagsToFind = tags.Split(",");
@@ -51,13 +45,13 @@ namespace Gallery_Flare.Controllers.Operations
                 {
                     foreach (ImageModel result in results)
                         if (result.tags.ToLower().Contains(tagsToFind[0].ToLower()))
-                            filtieredResults.Add(result);
+                            filtieredByTagsResults.Add(result);
                 }
 
                 else if (tagsToFind.Length > 1)
-                    filtieredResults = SearchByTags(results, tagsToFind, minumumMatchingTags);
+                    filtieredByTagsResults = SearchByTags(results, tagsToFind, minumumMatchingTags);
             }
-            return tags == "any" ? results : filtieredResults;
+            return tags == "any" ? results : filtieredByTagsResults;
         }
 
         public IList<ImageModel> SearchByTags(IList<ImageModel> results, string[] tagsToFind, int minumumMatchingTags)
@@ -68,7 +62,7 @@ namespace Gallery_Flare.Controllers.Operations
             {
                 foreach (ImageModel result in results)
                 {
-                    if (result.tags.ToLower().Contains(tagToFind.ToLower()) /*&& !filtieredResults.Contains(result)*/ && tagToFind != "")
+                    if (result.tags.ToLower().Contains(tagToFind.ToLower()) && tagToFind != "")
                     {
                         if (potentialMatches.ContainsKey(result))
                         {
@@ -88,31 +82,6 @@ namespace Gallery_Flare.Controllers.Operations
                     filtieredResults.Add(potentialMatch.Key);
             }
             return filtieredResults;
-        }
-
-        public async Task<string> GetIrrelevantTags()
-        {
-            IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(collectionName);
-            var document = await collection.Find(new BsonDocument()).FirstOrDefaultAsync();
-            IrrelevantTagsModel tags = BsonSerializer.Deserialize<IrrelevantTagsModel>(document);
-            return tags.words;
-        }
-
-        public async Task PostUser(string username, string password)
-        {
-            IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(collectionName);
-            var command = new BsonDocument { { "username", username }, { "password", password } };
-            await collection.InsertOneAsync(command);
-        }
-
-        public async Task<UserModel> GetUser(string username)
-        {
-            var builder = Builders<BsonDocument>.Filter;
-            var usernameFilter = builder.Eq("username", username);
-
-            IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(collectionName);
-            var document = await collection.Find(usernameFilter).FirstOrDefaultAsync();
-            return document != null ? BsonSerializer.Deserialize<UserModel>(document) : null;
         }
     }
 }

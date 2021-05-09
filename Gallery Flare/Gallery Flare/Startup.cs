@@ -1,3 +1,5 @@
+using Gallery_Flare.Controllers.Operations;
+using Gallery_Flare.Controllers.Operations.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +30,12 @@ namespace Gallery_Flare
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddScoped<JWTService, JWTService>();
+            services.AddScoped<UserService, UserService>();
+            services.AddScoped<AzureStoarge, AzureStoarge>();
+            services.AddScoped<GalleryDatabaseConnector, GalleryDatabaseConnector>();
+            services.AddScoped<DatabaseUserConnector, DatabaseUserConnector>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

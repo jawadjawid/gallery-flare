@@ -1,4 +1,5 @@
-﻿using Gallery_Flare.Models;
+﻿using Gallery_Flare.Controllers.Operations.Database;
+using Gallery_Flare.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace Gallery_Flare.Controllers.Operations
         {
             try
             {
+                DatabaseUserConnector database = new DatabaseUserConnector();
                 JWTService jWTService = new JWTService();
-                Database database = new Database("user");
 
                 var token = jWTService.Verify(jwt);
                 UserModel user = await database.GetUser(token.Issuer);
