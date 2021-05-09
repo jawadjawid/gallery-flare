@@ -13,7 +13,7 @@ namespace Gallery_Flare.Controllers.Operations
 {
     public class TagImages
     {
-        private static string _subscriptionKey = "89b7066e87e34632a64bfd5deca10af9";
+        private static string _subscriptionKey = "";
         private static string _baseUri = "https://api.bing.microsoft.com/v7.0/images/visualsearch";
 
         private static string _imageUrl = "";

@@ -12,7 +12,7 @@ namespace Gallery_Flare.Controllers.Operations.Database
     public class DatabaseParent
     {
         public MongoClient client;
-        public string connectionString = "mongodb+srv://jawad:jawad@cluster0.r6ob1.azure.mongodb.net/flare?retryWrites=true&w=majority";
+        public string connectionString = "";
         public string databaseName = "flare";
         public IMongoDatabase database;
         public string collectionName;

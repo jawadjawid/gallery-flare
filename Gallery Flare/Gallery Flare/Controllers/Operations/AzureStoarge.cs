@@ -10,7 +10,7 @@ namespace Gallery_Flare.Controllers.Operations
 {
     public class AzureStoarge
     {
-        private CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=galleryflare;AccountKey=qEzmObr5GKhv8XTXXl0PEOAQ3J/hVZM+tbpllTbRv1uHK76OCeeD0AufUsyoguYeaidqTWKEkl2nbB1LMK6wLw==;EndpointSuffix=core.windows.net");
+        private CloudStorageAccount storageAccount = CloudStorageAccount.Parse("");
         private CloudBlobClient blobClient;
         private CloudBlobContainer container;
 
