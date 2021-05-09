@@ -43,10 +43,10 @@ then run, after installing [.NET Core]
 ```sh
 dotnet run
 ```
-They contain a wide range of tests for the API endpoints which are divided into multiple files for organization purposes.
+They contain a wide range of tests for the API endpoints which are divided into multiple files for organization purposes. Each API endpoint has multiple test cases.
 ## Architecture
 
-This project follows the Modal View Controller architectural design pattern.
+This project follows the Modal View Controller architectural design pattern. And implements dependency injection and separation of concerns.
 The Models are C# files that are concrete prototypes of the data in the databases.
 They include ImageModel and UserModel.
 All the views are React components inside:
@@ -54,7 +54,7 @@ All the views are React components inside:
 \ClientApp\src\components
 ```
 ### Controllers
-The Controller folder is divided into two parts, API files in the home directory and an Operations folder with some helper functions. 
+The Controller folder is divided into two parts, API files in the home directory and an Operations folder with some helper functions. All of the dependencies in each controller are injected to prevent tight coupling. 
 - **AuthenticationController.cs**: api endpoints related to user auth
 - **GalleryController.cs**: an api endpoint to get all gallery images from the database
 - **SearchController.cs**: two api endpoints for searching by tags or searching by image
@@ -62,7 +62,7 @@ The Controller folder is divided into two parts, API files in the home directory
 
 #### Operations
 - **AzureStoarge.cs**: A helper function to post images to Azure blob storage
-- **Database.cs**: Contains all direct interactions with the databases
+- **Database**: Contains all direct interactions with the databases, divided into different classes such as User and Gallery connectors
 - **JWTService.cs**: functions to generate and verify jwt tokens
 - **TagImages.cs**: Uses the Bing Image Api to do research about images then cleans the data
 - **UserService.cs**: A helper to get logged in user and verify they exist in DB
