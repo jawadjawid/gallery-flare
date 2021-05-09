@@ -14,12 +14,12 @@ An easy-to-use web application to upload and search for images. Built as a POC f
 ## Features
 
 - Upload unlimited images securely to Microsoft Azure servers all around the world!
-- Upload multiple images at once with the drag and drop functionality for more efficiency!
+- Quickly upload multiple images at once with the drag and drop functionality!
 - Decide if other users can see your images by making them public or private
-- Each image is processed with smart APIs and given tags according to its characteristics for faster search functionality!
+- Each image is processed with smart APIs and tags are generated based on its content for a practical and advanced search functionality!
 - Search by tags and get all correlated images with high accuracy!
-- Search by image and get all the images that are similar to it with no time!
-- You can search and view all Public images without creating an account!
+- Search by image and get all similar images with no time!
+- Search and view all public images without creating an account!
 
 You can view a quick demo on youtube on how it works by clicking on the image
 
@@ -35,7 +35,7 @@ You can visit the app from here:
 [Gallery Flare]
 
 ## Tests
-Unit tests are written in xUnit and C#, to run them all you have to do is navigate to
+Unit tests are written in xUnit and C#. To run them, all you have to do is navigate to
 ```sh
 \Gallery Flare\Tests\GalleryFlareTests
 ```
@@ -43,7 +43,7 @@ then run, after installing [.NET Core]
 ```sh
 dotnet run
 ```
-They include tests about the API endpoints with various scenarios. Divided into multiple files for organization purposes.
+They contain a wide range of tests for the API endpoints which are divided into multiple files for organization purposes.
 ## Architecture
 
 This project follows the Modal View Controller architectural design pattern.
@@ -55,13 +55,13 @@ All the views are React components inside:
 ```
 ### Controllers
 The Controller folder is divided into two parts, API files in the home directory and an Operations folder with some helper functions. 
-- **AuthenticationController.cs**: api endpoints realted to user auth
-- **GalleryController.cs**: an api enpoint to get all gallery images from database
-- **SearchController.cs**: two api endpoints fro searching by tags or searching by image
+- **AuthenticationController.cs**: api endpoints related to user auth
+- **GalleryController.cs**: an api endpoint to get all gallery images from the database
+- **SearchController.cs**: two api endpoints for searching by tags or searching by image
 - **UploadController.cs**: an api endpoint to upload images to azure and store their info in MongoDB
 
 #### Operations
-- **AzureStoarge.cs**: A helper function to post images to Azure blob stoarge
+- **AzureStoarge.cs**: A helper function to post images to Azure blob storage
 - **Database.cs**: Contains all direct interactions with the databases
 - **JWTService.cs**: functions to generate and verify jwt tokens
 - **TagImages.cs**: Uses the Bing Image Api to do research about images then cleans the data
@@ -73,7 +73,7 @@ While uploading an image the server will call the Bing image API and analyze tha
 #### View
 Every time the user views the Gallery, the GalleryController.cs API endpoint is called, which then calls Database.GetImagesFromDbAsync() with the appropriate filters, such as username, access, and tags. The endpoint returns a stringified array with image URLs and other needed image data.
 #### Search
-Users can search for an image by its tags, or by a similar image, both of them can be accessed from SearchController.cs. When a user searches by a tag the search API calls the Database helper and filters all previous images with that tag and returns them. When a user searches by image, the server analyzes that image just as if it's being uploaded and then it compares its tags with other images in the database and returns all the images with 4 or more matching tags (can be changed if needed).
+Users can search for an image by its tags, or by a similar image, both of them can be accessed from SearchController.cs. When a user searches by a tag, the search API calls the Database helper and filters all previous images with that tag and returns them. When a user searches by image, the server analyzes that image just as if it's being uploaded and then it compares its tags with other images in the database and returns all the images with 4 or more matching tags (can be changed if needed).
 
 
    [Shopify Fall 2021 Backend Developer Internship]: <https://docs.google.com/document/d/1ZKRywXQLZWOqVOHC4JkF3LqdpO3Llpfk_CkZPR8bjak/edit#heading=h.n7bww7g70ipk>
