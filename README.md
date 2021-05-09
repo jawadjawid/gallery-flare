@@ -62,7 +62,7 @@ The Controller folder is divided into two parts, API files in the home directory
 
 #### Operations
 - **AzureStoarge.cs**: A helper function to post images to Azure blob storage
-- **Database**: Contains all direct interactions with the databases, divided into different classes such as User and Galler connectors
+- **Database**: Contains all direct interactions with the databases, divided into different classes such as User and Gallery connectors
 - **JWTService.cs**: functions to generate and verify jwt tokens
 - **TagImages.cs**: Uses the Bing Image Api to do research about images then cleans the data
 - **UserService.cs**: A helper to get logged in user and verify they exist in DB
