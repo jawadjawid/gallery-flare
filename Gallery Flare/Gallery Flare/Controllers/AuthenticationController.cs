@@ -19,16 +19,16 @@ namespace Gallery_Flare.Controllers
             {
                 UserModel userResult = await database.GetUser(user.username);
                 if (userResult != null)
-                    return NotFound("User name is already taken!");
+                    return BadRequest("User name is already taken!");
 
                 string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.password);
                 await database.PostUser(user.username, passwordHash);
                 return Ok();
             } catch (Exception)
             {
-                return NotFound();
+                return BadRequest();
             }
-       
+
         }
 
         [HttpPost("Login")]

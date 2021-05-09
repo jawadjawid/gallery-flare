@@ -50,7 +50,7 @@ export class Home extends Component {
                             <p>Search by tags and get all corelated images with high accurecy! </p>
                         </Col>
                         <Col className="contain2"><img src={"https://galleryflare.blob.core.windows.net/flare/smart-search.png"} className="photo" alt="Logo" />
-                            <p>Search by tags and get all correlated images with high accuracy! </p>
+                            <p> Search by image and get all the images that are similar to it with no time! </p>
                         </Col>
                         <Col className="contain2"><img src={"https://galleryflare.blob.core.windows.net/flare/easy.png"} className="photo" alt="Logo" />
                             <p>You can search and view all Public images without creating an account! </p>
