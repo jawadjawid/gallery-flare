@@ -1,6 +1,6 @@
 # [Gallery Flare]
 
-An easy-to-use web application to upload and search for images. Built as a POC for the [Shopify Fall 2021 Backend Developer Internship]. You can visit the app from here: [Gallery Flare]
+An easy-to-use web application to upload and search for images. You can visit the app from here: [Gallery Flare]
 ## Tech
 - ASP.NET Core for the server
 - React.JS with MaterialUI for the frontend
